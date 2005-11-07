@@ -1,7 +1,7 @@
 package org.apache.maven.plugins.castor;
 
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2005 The Codehaus.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,63 +16,314 @@ package org.apache.maven.plugins.castor;
  * limitations under the License.
  */
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.commons.io.FileUtils;
-
-import org.exolab.castor.builder.SourceGenerator;
-
-import java.util.ArrayList;
-import java.io.File;
-import java.io.IOException;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.compiler.util.scan.InclusionScanException;
+import org.codehaus.plexus.compiler.util.scan.SourceInclusionScanner;
+import org.codehaus.plexus.compiler.util.scan.StaleSourceScanner;
+import org.codehaus.plexus.compiler.util.scan.mapping.SourceMapping;
+import org.codehaus.plexus.compiler.util.scan.mapping.SuffixMapping;
+import org.codehaus.plexus.util.FileUtils;
 
 /**
+ * A plugin for turning xsds in to java source using castor.  Two main sources for this
+ * code were the SableCC plugin by Jesse McConnel and the Castor Source Gen Ant Task
+ * which is part of Castor.
+ * 
  * @goal generate
  * @phase generate-sources
+ * @description Castor plugin
+ * @author brozow <brozow@opennms.org>
+ * @author jesse <jesse.mcconnell@gmail.com>
+
  */
 public class CodeGeneratorMojo
     extends AbstractMojo
 {
 
-    private static final String TIMESTAMP = "/tstamp.log";
+    private static final String DISABLE_DESCRIPTORS_MSG = "Disabling generation of Class descriptors";
 
+    private static final String DISABLE_MARSHALL_MSG = "Disabling generation of Marshalling framework methods (marshall, unmarshall, validate).";
 
     /**
-     * @parameter
-     * @required
+     * The binding file to use for mapping xml to java.
+     * 
+     * @parameter expression="${basedir}/src/main/castor/bindings.xml"
      */
-    private String dest;
+    private String bindingfile;
 
     /**
+     * A schema file to process.  If this is not set then all .xsd files in
+     * schemaDirectory will be processed.
+     * 
      * @parameter
-     * @required
-     */
-    private String tstamp;
-
-    /**
-     * @parameter
-     * @required
      */
     private String schema;
 
     /**
+     * The source directory containing *.xsd files
+     * 
+     * @parameter expression="${basedir}/src/main/castor"
+     */
+    private String schemaDirectory;
+
+    /**
+     * The directory to output the generated sources to
+     * 
+     * @parameter expression="${project.build.directory}/generated-sources/castor"
+     * @todo This would be better as outputDirectory but for backward compatibility I left it as dest
+     */
+    private String dest;
+
+    /**
+     * The directory to store the processed xsds.  The timestamps of these xsds
+     * are used to determine if the source for that xsd need to be regenerated
+     * 
+     * @parameter expression="${basedir}/target/xsds"
+     * @todo timestampDirectory would be a better name for this. Used this name for backward compatibility
+     */
+    private String tstamp;
+
+    /**
+     * The granularity in milliseconds of the last modification
+     * date for testing whether a source needs recompilation
+     * 
+     * @parameter expression="${lastModGranularityMs}" default-value="0"
+     */
+    private int staleMillis = 0;
+
+    /**
+     * Castor collection types. Allowable values are 'vector', 'arraylist', 'j2' or 'odmg'
+     * 'j2' and 'arraylist' are the same.
+     * @parameter default-value="vector";
+     * @todo Since everyone is using Java2 'arraylist' would be a better default but I left this 
+     * for backwards compatibility
+     */
+    private String types = "vector";
+
+    /**
+     * Don't generate descriptors
+     * @parameter default-value="true"
+     */
+    private boolean descriptors = true;
+
+    /**
+     * Verbose output during generation
+     * @parameter default-value="false"
+     */
+    private boolean verbose = false;
+
+    /**
+     * Enable warning messages
+     * @parameter default-value="false"
+     */
+    private boolean warnings = false;
+
+    /**
+     * Don't generate marshaller
+     * @parameter default-value="true"
+     */
+    private boolean marshal = true;
+
+    /**
+     * The line separator to use in generated source. Can be either win, unix, or mac
+     * @parameter 
+     */
+    private String lineSeparator;
+
+    /**
+     * The castorbuilder.properties file to use
+     * @parameter expression="${basedir}/src/main/castor/castorbuilder.properties"
+     */
+    private String properties;
+
+    /**
+     * The package for the generated source
      * @parameter
      */
     private String packaging;
 
     /**
-     * @parameter
+     * @parameter expression="${project}"
+     * @required
      */
-    private String types;
+    private MavenProject project;
+
+    private CastorSourceGenerator sgen;
+
+    public void execute()
+        throws MojoExecutionException
+    {
+
+        if ( !FileUtils.fileExists( dest ) )
+        {
+            FileUtils.mkdir( dest );
+        }
+
+        Set staleXSDs = computeStaleXSDs();
+
+        if ( staleXSDs.isEmpty() )
+        {
+            getLog().info( "Nothing to process - all xsds are up to date" );
+            project.addCompileSourceRoot( dest );
+            return;
+        }
+
+        config();
+
+        for ( Iterator i = staleXSDs.iterator(); i.hasNext(); )
+        {
+            File xsd = (File) i.next();
+
+            try
+            {
+
+                processFile( xsd.getCanonicalPath() );
+                // make sure this is after the acutal processing, 
+                //otherwise it if fails the computeStaleXSDs will think it completed.
+                FileUtils.copyFileToDirectory( xsd, getTimeStampDirectory() );
+            }
+            catch ( Exception e )
+            {
+                throw new MojoExecutionException( "Castor execution failed", e );
+            }
+            catch ( Throwable t )
+            {
+                throw new MojoExecutionException( "Castor execution failed", t );
+            }
+        }
+
+        if ( project != null )
+        {
+            project.addCompileSourceRoot( dest );
+        }
+    }
+
+    private Set computeStaleXSDs()
+        throws MojoExecutionException
+    {
+        Set staleSources = new HashSet();
+
+        if ( schema != null )
+        {
+            File sourceFile = new File( schema );
+            File targetFile = new File( getTimeStampDirectory(), sourceFile.getName() );
+            if ( !targetFile.exists() || ( targetFile.lastModified() + staleMillis < sourceFile.lastModified() ) )
+            {
+                staleSources.add( sourceFile );
+            }
+        }
+        else
+        {
+            SourceMapping mapping = new SuffixMapping( ".xsd", ".xsd" );
+
+            File tstampDir = getTimeStampDirectory();
+
+            File schemaDir = new File( schemaDirectory );
+
+            SourceInclusionScanner scanner = getSourceInclusionScanner();
+
+            scanner.addSourceMapping( mapping );
+
+            try
+            {
+                staleSources.addAll( scanner.getIncludedSources( schemaDir, tstampDir ) );
+            }
+            catch ( InclusionScanException e )
+            {
+                throw new MojoExecutionException( "Error scanning source root: \'" + schemaDir
+                    + "\' for stale xsds to reprocess.", e );
+            }
+        }
+
+        return staleSources;
+    }
+
+    private SourceInclusionScanner getSourceInclusionScanner()
+    {
+        return new StaleSourceScanner( staleMillis );
+    }
+
+    private File getTimeStampDirectory()
+    {
+        return new File( tstamp );
+    }
+
+    private void config()
+        throws MojoExecutionException
+    {
+        sgen = CastorSourceGenerator.createSourceGenerator( types );
+
+        sgen.setLog( getLog() );
+
+        sgen.setLineSeparatorStyle( lineSeparator );
+
+        sgen.setDestDir( dest );
+
+        sgen.setBindingFile( bindingfile );
+
+        sgen.setVerbose( verbose );
+
+        sgen.setSuppressNonFatalWarnings( !warnings );
+
+        sgen.setDescriptorCreation( descriptors );
+        if ( !descriptors )
+        {
+            log( DISABLE_DESCRIPTORS_MSG );
+        }
+
+        sgen.setCreateMarshalMethods( marshal );
+        if ( !marshal )
+        {
+            log( DISABLE_MARSHALL_MSG );
+        }
+
+        sgen.setBuilderProperties( properties );
+    }
 
     /**
-     * @parameter default-value=true
+     * Run source generation
      */
-    private boolean marshal;
+    private void processFile( String filePath )
+        throws MojoExecutionException
+    {
+        log( "Processing " + filePath );
+        try
+        {
+            sgen.generateSource( filePath, packaging );
+        }
+        catch ( FileNotFoundException e )
+        {
+            String message = "XML Schema file \"" + filePath + "\" not found.";
+            log( message );
+            throw new MojoExecutionException( message );
+        }
+        catch ( IOException iox )
+        {
+            throw new MojoExecutionException( "An IOException occurred processing " + filePath, iox );
+        }
+        catch ( Exception e )
+        {
+            throw new MojoExecutionException( "An Exception occurred processing " + filePath, e );
+        }
+    }
+
+    private void log( String msg )
+    {
+        getLog().info( msg );
+    }
 
     public String getDest()
     {
-        return ( destHasNoValue() ? "" : dest.trim() );
+        return dest;
     }
 
     public void setDest( String dest )
@@ -80,19 +331,9 @@ public class CodeGeneratorMojo
         this.dest = dest;
     }
 
-    public boolean destHasNoValue()
-    {
-        return ( null == dest ) || ( "".equals( dest ) );
-    }
-
     public String getTstamp()
     {
-        return ( tstampHasNoValue() ? "" : tstamp.trim() + TIMESTAMP );
-    }
-
-    public String getTstampDirectory()
-    {
-        return ( tstampHasNoValue() ? "" : tstamp.trim() );
+        return tstamp;
     }
 
     public void setTstamp( String tstamp )
@@ -100,29 +341,9 @@ public class CodeGeneratorMojo
         this.tstamp = tstamp;
     }
 
-    public boolean tstampHasNoValue()
-    {
-        return ( null == tstamp ) || ( "".equals( tstamp ) );
-    }
-
-    public String getSchema()
-    {
-        return ( schemaHasNoValue() ? "" : schema.trim() );
-    }
-
-    public void setSchema( String schema )
-    {
-        this.schema = schema;
-    }
-
-    public boolean schemaHasNoValue()
-    {
-        return ( null == schema ) || ( "".equals( schema ) );
-    }
-
     public String getPackaging()
     {
-        return ( packagingHasNoValue() ? "" : packaging.trim() );
+        return packaging;
     }
 
     public void setPackaging( String packaging )
@@ -130,24 +351,24 @@ public class CodeGeneratorMojo
         this.packaging = packaging;
     }
 
-    public boolean packagingHasNoValue()
+    public String getSchema()
     {
-        return ( null == packaging ) || ( "".equals( packaging ) );
+        return schema;
+    }
+
+    public void setSchema( String schema )
+    {
+        this.schema = schema;
     }
 
     public String getTypes()
     {
-        return ( typesHasNoValue() ? "" : types.trim() );
+        return types;
     }
 
     public void setTypes( String types )
     {
         this.types = types;
-    }
-
-    public boolean typesHasNoValue()
-    {
-        return ( null == types ) || ( "".equals( types ) );
     }
 
     public boolean getMarshal()
@@ -160,59 +381,14 @@ public class CodeGeneratorMojo
         this.marshal = marshal;
     }
 
-    public void execute()
-        throws MojoExecutionException
+    public MavenProject getProject()
     {
-        File timestampFile = new File( getTstamp() );
-        File schemaFile = new File( getSchema() );
-        if ( ( !timestampFile.exists() ) ||
-             ( timestampFile.exists() && !FileUtils.isFileNewer( timestampFile, schemaFile ) ) )
-        {
-            try
-            {
-                File tstampDir = new File( getTstampDirectory() );
-                FileUtils.forceMkdir( tstampDir );
-                FileUtils.touch( timestampFile );
-            }
-            catch ( IOException e )
-            {
-                throw new MojoExecutionException( e.getMessage() );
-            }
-            ArrayList a = new ArrayList();
-            if ( !schemaHasNoValue() )
-            {
-                a.add( "-i" + getSchema() );
-            }
-            a.add( "-f" );
-            if ( !packagingHasNoValue() )
-            {
-                a.add( "-package" + getPackaging() );
-            }
-            if ( !typesHasNoValue() )
-            {
-                a.add( "-types" + getTypes() );
-            }
-            if ( marshal )
-            {
-                a.add( "-nomarshall" );
-            }
-            if ( !destHasNoValue() )
-            {
-                a.add( "-dest" + getDest() );
-            }
-            SourceGenerator sourceGenerator = new SourceGenerator();
-            String args[] = new String[a.size()];
-            for ( int i = 0; i < a.size(); i++ )
-            {
-                args[i] = ( String ) a.get( i );
-            }
-            sourceGenerator.main( args );
-        }
-        else
-        {
-            System.out.println( "Schema is up to date. Did not generate source files. Delete "
-                                + getTstamp() +
-                                " if you want to force source generation." );
-        }
+        return project;
     }
+
+    public void setProject( MavenProject project )
+    {
+        this.project = project;
+    }
+
 }

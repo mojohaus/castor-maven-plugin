@@ -16,7 +16,9 @@ package org.apache.maven.plugins.castor;
  * limitations under the License.
  */
 
+import org.apache.maven.model.Model;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
 import org.apache.commons.io.FileUtils;
 
 import junit.framework.TestCase;
@@ -33,6 +35,7 @@ public class CodeGeneratorMojoTest
     public void setUp()
     {
         codeGeneratorMojo = new CodeGeneratorMojo();
+        codeGeneratorMojo.setProject(new MavenProject(new Model()));
     }
 
     public void tearDown()
@@ -45,7 +48,7 @@ public class CodeGeneratorMojoTest
     {
         File aClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/A.java" );
         File aDescriptorClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/ADescriptor.java" );
-        File timestamp = new File( "src/test/resources/timestamp/tstamp.log" );
+        File timestamp = getTimeStampFile();
         if ( timestamp.exists() )
         {
             timestamp.delete();
@@ -81,11 +84,16 @@ public class CodeGeneratorMojoTest
         }
     }
 
+    private File getTimeStampFile()
+    {
+        return new File( "src/test/resources/timestamp/mapping.xml" );
+    }
+
     public void testCreateTimeStamp()
         throws MojoExecutionException
     {
         File timeStampFolder = new File( "src/test/resources/timestamp" );
-        File timeStampFile = new File( "src/test/resources/timestamp/tstamp.log" );
+        File timeStampFile = getTimeStampFile();
         if ( !timeStampFolder.exists() )
         {
             timeStampFolder.mkdirs();
@@ -137,7 +145,7 @@ public class CodeGeneratorMojoTest
         throws MojoExecutionException
     {
         File timeStampFolder = new File( "src/test/resources/timestamp" );
-        File timeStampFile = new File( "src/test/resources/timestamp/tstamp.log" );
+        File timeStampFile = getTimeStampFile();
         if ( timeStampFile.exists() )
         {
             timeStampFile.delete();
@@ -190,14 +198,13 @@ public class CodeGeneratorMojoTest
         throws MojoExecutionException, IOException
     {
         File timeStampFolder = new File( "src/test/resources/timestamp" );
-        File timeStampFile = new File( "src/test/resources/timestamp/tstamp.log" );
+        File timeStampFile = getTimeStampFile();
         if ( !timeStampFolder.exists() )
         {
             timeStampFolder.mkdirs();
         }
         if ( !timeStampFile.exists() )
         {
-            File timestamp = new File( "src/test/resources/timestamp/tstamp.log" );
             File sourcefile = new File( "src/test/resources/mapping.xml" );
             timeStampFile.setLastModified( sourcefile.lastModified() - 1 );
         }
@@ -244,14 +251,14 @@ public class CodeGeneratorMojoTest
         throws MojoExecutionException, IOException
     {
         File timeStampFolder = new File( "src/test/resources/timestamp" );
-        File timeStampFile = new File( "src/test/resources/timestamp/tstamp.log" );
+        File timeStampFile = getTimeStampFile();
         if ( !timeStampFolder.exists() )
         {
             timeStampFolder.mkdirs();
         }
         if ( !timeStampFile.exists() )
         {
-            File timestamp = new File( "src/test/resources/timestamp/tstamp.log" );
+            File timestamp = getTimeStampFile();
             FileUtils.touch( timestamp );
             File sourcefile = new File( "src/test/resources/mapping.xml" );
             timeStampFile.setLastModified( sourcefile.lastModified() + 1 );
@@ -298,13 +305,13 @@ public class CodeGeneratorMojoTest
     public void testDestProperty()
     {
         codeGeneratorMojo.setDest( "testString" );
-        assertEquals( codeGeneratorMojo.getDest(), "testString" );
+        assertEquals( "testString", codeGeneratorMojo.getDest());
     }
 
     public void testTStampProperty()
     {
         codeGeneratorMojo.setTstamp( "testString" );
-        assertEquals( codeGeneratorMojo.getTstamp(), "testString/tstamp.log" );
+        assertEquals( "testString", codeGeneratorMojo.getTstamp());
     }
 
     public void testSchemaProperty()
