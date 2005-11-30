@@ -1,4 +1,4 @@
-package org.apache.maven.plugins.castor;
+package org.codehaus.mojo.castor;
 
 /*
  * Copyright 2001-2005 The Apache Software Foundation.
@@ -47,8 +47,8 @@ public class CodeGeneratorMojoTest
         FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
         FileUtils.deleteDirectory( new File( TIMESTAMP_DIR ) );
 
-        aClassFile = new File( GENERATED_DIR, "org/apache/maven/plugins/castor/A.java" );
-        aDescriptorClassFile = new File( GENERATED_DIR, "org/apache/maven/plugins/castor/ADescriptor.java" );
+        aClassFile = new File( GENERATED_DIR, "org/codehaus/mojo/castor/A.java" );
+        aDescriptorClassFile = new File( GENERATED_DIR, "org/codehaus/mojo/castor/ADescriptor.java" );
 
         codeGeneratorMojo = new CodeGeneratorMojo();
         codeGeneratorMojo.setProject( new MavenProject( new Model() ) );
@@ -68,7 +68,7 @@ public class CodeGeneratorMojoTest
         throws MojoExecutionException
     {
 
-        codeGeneratorMojo.setPackaging( "org.apache.maven.plugins.castor" );
+        codeGeneratorMojo.setPackaging( "org.codehaus.mojo.castor" );
         codeGeneratorMojo.setSchema( MAPPING_XSD );
         codeGeneratorMojo.execute();
 
@@ -98,7 +98,7 @@ public class CodeGeneratorMojoTest
     {
         File timeStampFile = getTimeStampFile();
 
-        codeGeneratorMojo.setPackaging( "org.apache.maven.plugins.castor" );
+        codeGeneratorMojo.setPackaging( "org.codehaus.mojo.castor" );
         codeGeneratorMojo.setSchema( MAPPING_XSD );
         codeGeneratorMojo.execute();
 
@@ -113,7 +113,7 @@ public class CodeGeneratorMojoTest
     {
         File timeStampFile = getTimeStampFile();
 
-        codeGeneratorMojo.setPackaging( "org.apache.maven.plugins.castor" );
+        codeGeneratorMojo.setPackaging( "org.codehaus.mojo.castor" );
         codeGeneratorMojo.setSchema( MAPPING_XSD );
         codeGeneratorMojo.execute();
 
@@ -129,7 +129,7 @@ public class CodeGeneratorMojoTest
     {
         File timeStampFile = createTimeStampWithTime( timestampOf( MAPPING_XSD ) - 1 );
 
-        codeGeneratorMojo.setPackaging( "org.apache.maven.plugins.castor" );
+        codeGeneratorMojo.setPackaging( "org.codehaus.mojo.castor" );
         codeGeneratorMojo.setSchema( MAPPING_XSD );
         codeGeneratorMojo.execute();
 
@@ -161,7 +161,7 @@ public class CodeGeneratorMojoTest
     {
         File timeStampFile = createTimeStampWithTime( timestampOf( MAPPING_XSD ) + 1 );
 
-        codeGeneratorMojo.setPackaging( "org.apache.maven.plugins.castor" );
+        codeGeneratorMojo.setPackaging( "org.codehaus.mojo.castor" );
         codeGeneratorMojo.setSchema( MAPPING_XSD );
         codeGeneratorMojo.execute();
 

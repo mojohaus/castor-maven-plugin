@@ -1,4 +1,4 @@
-package org.apache.maven.plugins.castor;
+package org.codehaus.mojo.castor;
 
 /*
  * Copyright 2005 The Codehaus.

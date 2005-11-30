@@ -1,4 +1,4 @@
-package org.apache.maven.plugins.castor;
+package org.codehaus.mojo.castor;
 
 import java.io.File;
 import java.io.FileInputStream;
