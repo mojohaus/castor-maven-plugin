@@ -16,188 +16,133 @@ package org.apache.maven.plugins.castor;
  * limitations under the License.
  */
 
-import org.apache.maven.model.Model;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
-import org.apache.commons.io.FileUtils;
-
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.maven.model.Model;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.PlexusTestCase;
+
 public class CodeGeneratorMojoTest
-    extends TestCase
+    extends PlexusTestCase
 {
+
+    private static final String TIMESTAMP_DIR = getBasedir() + "/target/test/resources/timestamp";
+
+    private static final String GENERATED_DIR = getBasedir() + "/target/test/generated";
+
+    private static final String MAPPING_XSD = getBasedir() + "/src/test/resources/mapping.xml";
 
     CodeGeneratorMojo codeGeneratorMojo;
 
+    private File aClassFile;
+
+    private File aDescriptorClassFile;
+
     public void setUp()
+        throws IOException
     {
+        FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
+        FileUtils.deleteDirectory( new File( TIMESTAMP_DIR ) );
+
+        aClassFile = new File( GENERATED_DIR, "org/apache/maven/plugins/castor/A.java" );
+        aDescriptorClassFile = new File( GENERATED_DIR, "org/apache/maven/plugins/castor/ADescriptor.java" );
+
         codeGeneratorMojo = new CodeGeneratorMojo();
-        codeGeneratorMojo.setProject(new MavenProject(new Model()));
+        codeGeneratorMojo.setProject( new MavenProject( new Model() ) );
+        codeGeneratorMojo.setDest( GENERATED_DIR );
+        codeGeneratorMojo.setTstamp( TIMESTAMP_DIR );
     }
 
     public void tearDown()
+        throws IOException
     {
         codeGeneratorMojo = null;
+        FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
+        FileUtils.deleteDirectory( new File( TIMESTAMP_DIR ) );
     }
 
     public void testExecute()
         throws MojoExecutionException
     {
-        File aClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/A.java" );
-        File aDescriptorClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/ADescriptor.java" );
-        File timestamp = getTimeStampFile();
-        if ( timestamp.exists() )
-        {
-            timestamp.delete();
-        }
-        if ( aClassFile.exists() )
-        {
-            aClassFile.delete();
-        }
-        if ( aDescriptorClassFile.exists() )
-        {
-            aDescriptorClassFile.delete();
-        }
-        assertTrue( !aClassFile.exists() );
-        assertTrue( !aDescriptorClassFile.exists() );
-        codeGeneratorMojo.setDest( "src/test/java" );
-        codeGeneratorMojo.setTstamp( "src/test/resources/timestamp" );
+
         codeGeneratorMojo.setPackaging( "org.apache.maven.plugins.castor" );
-        codeGeneratorMojo.setSchema( "src/test/resources/mapping.xml" );
+        codeGeneratorMojo.setSchema( MAPPING_XSD );
         codeGeneratorMojo.execute();
+
         assertTrue( aClassFile.exists() );
         assertTrue( aDescriptorClassFile.exists() );
-        if ( timestamp.exists() )
-        {
-            timestamp.delete();
-        }
-        if ( aClassFile.exists() )
-        {
-            aClassFile.delete();
-        }
-        if ( aDescriptorClassFile.exists() )
-        {
-            aDescriptorClassFile.delete();
-        }
+
+    }
+
+    public void testEmptyPackage()
+        throws MojoExecutionException
+    {
+
+        codeGeneratorMojo.setSchema( getPathTo( "src/test/resources/vacuumd-configuration.xsd" ) );
+        codeGeneratorMojo.setProperties( getPathTo( "src/test/resources/castorbuilder.properties" ) );
+        codeGeneratorMojo.execute();
+
+        assertFalse( new File( GENERATED_DIR, "Actions.java" ).exists() );
     }
 
     private File getTimeStampFile()
     {
-        return new File( "src/test/resources/timestamp/mapping.xml" );
+        return new File( TIMESTAMP_DIR, "mapping.xml" );
     }
 
     public void testCreateTimeStamp()
         throws MojoExecutionException
     {
-        File timeStampFolder = new File( "src/test/resources/timestamp" );
         File timeStampFile = getTimeStampFile();
-        if ( !timeStampFolder.exists() )
-        {
-            timeStampFolder.mkdirs();
-        }
-        if ( timeStampFile.exists() )
-        {
-            timeStampFile.delete();
-        }
 
-        File aClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/A.java" );
-        if ( aClassFile.exists() )
-        {
-            aClassFile.delete();
-        }
-
-        File aDescriptorClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/ADescriptor.java" );
-        if ( aDescriptorClassFile.exists() )
-        {
-            aDescriptorClassFile.delete();
-        }
-
-        assertTrue( !aClassFile.exists() );
-        assertTrue( !aDescriptorClassFile.exists() );
-        codeGeneratorMojo.setDest( "src/test/java" );
-        codeGeneratorMojo.setTstamp( "src/test/resources/timestamp" );
         codeGeneratorMojo.setPackaging( "org.apache.maven.plugins.castor" );
-        codeGeneratorMojo.setSchema( "src/test/resources/mapping.xml" );
+        codeGeneratorMojo.setSchema( MAPPING_XSD );
         codeGeneratorMojo.execute();
+
         assertTrue( aClassFile.exists() );
         assertTrue( aDescriptorClassFile.exists() );
         assertTrue( timeStampFile.exists() );
 
-        if ( timeStampFile.exists() )
-        {
-            timeStampFile.delete();
-        }
-
-        if ( aClassFile.exists() )
-        {
-            aClassFile.delete();
-        }
-        if ( aDescriptorClassFile.exists() )
-        {
-            aDescriptorClassFile.delete();
-        }
     }
 
     public void testCreateTimeStampFolder()
         throws MojoExecutionException
     {
-        File timeStampFolder = new File( "src/test/resources/timestamp" );
         File timeStampFile = getTimeStampFile();
-        if ( timeStampFile.exists() )
-        {
-            timeStampFile.delete();
-        }
-        if ( timeStampFolder.exists() )
-        {
-            timeStampFolder.delete();
-        }
 
-        File aClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/A.java" );
-        if ( aClassFile.exists() )
-        {
-            aClassFile.delete();
-        }
-
-        File aDescriptorClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/ADescriptor.java" );
-        if ( aDescriptorClassFile.exists() )
-        {
-            aDescriptorClassFile.delete();
-        }
-
-        assertTrue( !aClassFile.exists() );
-        assertTrue( !aDescriptorClassFile.exists() );
-        codeGeneratorMojo.setDest( "src/test/java" );
-        codeGeneratorMojo.setTstamp( "src/test/resources/timestamp" );
         codeGeneratorMojo.setPackaging( "org.apache.maven.plugins.castor" );
-        codeGeneratorMojo.setSchema( "src/test/resources/mapping.xml" );
+        codeGeneratorMojo.setSchema( MAPPING_XSD );
         codeGeneratorMojo.execute();
+
         assertTrue( aClassFile.exists() );
         assertTrue( aDescriptorClassFile.exists() );
         assertTrue( timeStampFile.exists() );
 
-        if ( timeStampFile.exists() )
-        {
-            timeStampFile.delete();
-        }
-
-        if ( aClassFile.exists() )
-        {
-            aClassFile.delete();
-        }
-        if ( aDescriptorClassFile.exists() )
-        {
-            aDescriptorClassFile.delete();
-        }
     }
 
     // timestamp exist but not updated
     public void testCreateTimeStampOld()
         throws MojoExecutionException, IOException
     {
-        File timeStampFolder = new File( "src/test/resources/timestamp" );
+        File timeStampFile = createTimeStampWithTime( timestampOf( MAPPING_XSD ) - 1 );
+
+        codeGeneratorMojo.setPackaging( "org.apache.maven.plugins.castor" );
+        codeGeneratorMojo.setSchema( MAPPING_XSD );
+        codeGeneratorMojo.execute();
+
+        assertTrue( aClassFile.exists() );
+        assertTrue( aDescriptorClassFile.exists() );
+        assertTrue( timeStampFile.exists() );
+
+    }
+
+    private File createTimeStampWithTime( long time )
+        throws IOException
+    {
+        File timeStampFolder = new File( TIMESTAMP_DIR );
         File timeStampFile = getTimeStampFile();
         if ( !timeStampFolder.exists() )
         {
@@ -205,113 +150,44 @@ public class CodeGeneratorMojoTest
         }
         if ( !timeStampFile.exists() )
         {
-            File sourcefile = new File( "src/test/resources/mapping.xml" );
-            timeStampFile.setLastModified( sourcefile.lastModified() - 1 );
+            FileUtils.touch( timeStampFile );
+            timeStampFile.setLastModified( time );
         }
-
-        File aClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/A.java" );
-        if ( aClassFile.exists() )
-        {
-            aClassFile.delete();
-        }
-
-        File aDescriptorClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/ADescriptor.java" );
-        if ( aDescriptorClassFile.exists() )
-        {
-            aDescriptorClassFile.delete();
-        }
-
-        assertTrue( !aClassFile.exists() );
-        assertTrue( !aDescriptorClassFile.exists() );
-        codeGeneratorMojo.setDest( "src/test/java" );
-        codeGeneratorMojo.setTstamp( "src/test/resources/timestamp" );
-        codeGeneratorMojo.setPackaging( "org.apache.maven.plugins.castor" );
-        codeGeneratorMojo.setSchema( "src/test/resources/mapping.xml" );
-        codeGeneratorMojo.execute();
-        assertTrue( aClassFile.exists() );
-        assertTrue( aDescriptorClassFile.exists() );
-        assertTrue( timeStampFile.exists() );
-
-        if ( timeStampFile.exists() )
-        {
-            timeStampFile.delete();
-        }
-
-        if ( aClassFile.exists() )
-        {
-            aClassFile.delete();
-        }
-        if ( aDescriptorClassFile.exists() )
-        {
-            aDescriptorClassFile.delete();
-        }
+        return timeStampFile;
     }
 
     public void testCreateTimeStampLatest()
         throws MojoExecutionException, IOException
     {
-        File timeStampFolder = new File( "src/test/resources/timestamp" );
-        File timeStampFile = getTimeStampFile();
-        if ( !timeStampFolder.exists() )
-        {
-            timeStampFolder.mkdirs();
-        }
-        if ( !timeStampFile.exists() )
-        {
-            File timestamp = getTimeStampFile();
-            FileUtils.touch( timestamp );
-            File sourcefile = new File( "src/test/resources/mapping.xml" );
-            timeStampFile.setLastModified( sourcefile.lastModified() + 1 );
-        }
+        File timeStampFile = createTimeStampWithTime( timestampOf( MAPPING_XSD ) + 1 );
 
-        File aClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/A.java" );
-        if ( aClassFile.exists() )
-        {
-            aClassFile.delete();
-        }
-
-        File aDescriptorClassFile = new File( "src/test/java/org/apache/maven/plugins/castor/ADescriptor.java" );
-        if ( aDescriptorClassFile.exists() )
-        {
-            aDescriptorClassFile.delete();
-        }
-
-        assertTrue( !aClassFile.exists() );
-        assertTrue( !aDescriptorClassFile.exists() );
-        codeGeneratorMojo.setDest( "src/test/java" );
-        codeGeneratorMojo.setTstamp( "src/test/resources/timestamp" );
         codeGeneratorMojo.setPackaging( "org.apache.maven.plugins.castor" );
-        codeGeneratorMojo.setSchema( "src/test/resources/mapping.xml" );
+        codeGeneratorMojo.setSchema( MAPPING_XSD );
         codeGeneratorMojo.execute();
+
         assertTrue( !aClassFile.exists() );
         assertTrue( !aDescriptorClassFile.exists() );
         assertTrue( timeStampFile.exists() );
 
-        if ( timeStampFile.exists() )
-        {
-            timeStampFile.delete();
-        }
+    }
 
-        if ( aClassFile.exists() )
-        {
-            aClassFile.delete();
-        }
-        if ( aDescriptorClassFile.exists() )
-        {
-            aDescriptorClassFile.delete();
-        }
+    private long timestampOf( String file )
+    {
+        File sourcefile = new File( file );
+        long time = sourcefile.lastModified();
+        return time;
     }
 
     public void testDestProperty()
     {
         codeGeneratorMojo.setDest( "testString" );
-        assertEquals( "testString", codeGeneratorMojo.getDest());
+        assertEquals( "testString", codeGeneratorMojo.getDest() );
     }
 
     public void testTStampProperty()
     {
         codeGeneratorMojo.setTstamp( "testString" );
-        assertEquals( "testString", codeGeneratorMojo.getTstamp());
+        assertEquals( "testString", codeGeneratorMojo.getTstamp() );
     }
 
     public void testSchemaProperty()
@@ -336,6 +212,11 @@ public class CodeGeneratorMojoTest
     {
         codeGeneratorMojo.setMarshal( true );
         assertTrue( codeGeneratorMojo.getMarshal() );
+    }
+
+    private String getPathTo( String relativePath )
+    {
+        return getBasedir() + '/' + relativePath;
     }
 
 }

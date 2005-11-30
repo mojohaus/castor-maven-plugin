@@ -370,6 +370,10 @@ public class CodeGeneratorMojo
     {
         this.types = types;
     }
+    
+    public void setProperties(String properties) {
+        this.properties = properties;
+    }
 
     public boolean getMarshal()
     {

@@ -87,7 +87,13 @@ class CastorSourceGenerator
             throw new RuntimeException( "Can't parse input file " + source.getSystemId() + ".\n" + e, e );
         }
         Schema schema = schemaUnmarshaller.getSchema();
-
+        if ( packageName == null && schema.getTargetNamespace() != null )
+        {
+            packageName = lookupPackageByNamespace( schema.getTargetNamespace() );
+            if ( "".equals( packageName ) )
+                packageName = null;
+        }
+        
         generateSource( schema, packageName );
     }
 
