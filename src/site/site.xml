@@ -14,8 +14,9 @@
          <item name="Mojo" href="http://mojo.codehaus.org"/>
          <item name="Maven" href="http://maven.apache.org/maven2"/>
       </links>
-      <menu name="Mojo">
-         <item name="mojo" href="http://mojo.codehaus.org"/>
+      <menu name="Castor Plugin">
+      	<item name="Home" href="index.html"/>
+         <item name="Using the Plugin" href="howto.html"/>
       </menu>
       ${reports}
    </body>

@@ -34,9 +34,9 @@ import org.codehaus.plexus.compiler.util.scan.mapping.SuffixMapping;
 import org.codehaus.plexus.util.FileUtils;
 
 /**
- * A plugin for turning xsds in to java source using castor.  Two main sources for this
- * code were the SableCC plugin by Jesse McConnel and the Castor Source Gen Ant Task
- * which is part of Castor.
+ * A mojo that uses castor to generate a collection of javabeans from an XSD using Castor.  Detailed
+ * explainations of many of these can be found in the details fo the Castor 
+ * <a href="http://castor.codehaus.org/sourcegen.html">SourceGenerator</a>.
  * 
  * @goal generate
  * @phase generate-sources
@@ -110,7 +110,7 @@ public class CodeGeneratorMojo
     private String types = "vector";
 
     /**
-     * Don't generate descriptors
+     * If true, generate descriptors
      * @parameter default-value="true"
      */
     private boolean descriptors = true;
@@ -128,7 +128,7 @@ public class CodeGeneratorMojo
     private boolean warnings = false;
 
     /**
-     * Don't generate marshaller
+     * if false, don't generate the marshaller
      * @parameter default-value="true"
      */
     private boolean marshal = true;
