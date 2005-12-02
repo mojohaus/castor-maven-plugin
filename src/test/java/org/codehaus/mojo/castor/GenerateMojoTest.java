@@ -25,7 +25,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
 
-public class CodeGeneratorMojoTest
+public class GenerateMojoTest
     extends PlexusTestCase
 {
 
@@ -35,7 +35,7 @@ public class CodeGeneratorMojoTest
 
     private static final String MAPPING_XSD = getBasedir() + "/src/test/resources/mapping.xml";
 
-    CodeGeneratorMojo codeGeneratorMojo;
+    GenerateMojo generateMojo;
 
     private File aClassFile;
 
@@ -50,16 +50,16 @@ public class CodeGeneratorMojoTest
         aClassFile = new File( GENERATED_DIR, "org/codehaus/mojo/castor/A.java" );
         aDescriptorClassFile = new File( GENERATED_DIR, "org/codehaus/mojo/castor/ADescriptor.java" );
 
-        codeGeneratorMojo = new CodeGeneratorMojo();
-        codeGeneratorMojo.setProject( new MavenProject( new Model() ) );
-        codeGeneratorMojo.setDest( GENERATED_DIR );
-        codeGeneratorMojo.setTstamp( TIMESTAMP_DIR );
+        generateMojo = new GenerateMojo();
+        generateMojo.setProject( new MavenProject( new Model() ) );
+        generateMojo.setDest( GENERATED_DIR );
+        generateMojo.setTstamp( TIMESTAMP_DIR );
     }
 
     public void tearDown()
         throws IOException
     {
-        codeGeneratorMojo = null;
+        generateMojo = null;
         FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
         FileUtils.deleteDirectory( new File( TIMESTAMP_DIR ) );
     }
@@ -68,9 +68,9 @@ public class CodeGeneratorMojoTest
         throws MojoExecutionException
     {
 
-        codeGeneratorMojo.setPackaging( "org.codehaus.mojo.castor" );
-        codeGeneratorMojo.setSchema( MAPPING_XSD );
-        codeGeneratorMojo.execute();
+        generateMojo.setPackaging( "org.codehaus.mojo.castor" );
+        generateMojo.setSchema( MAPPING_XSD );
+        generateMojo.execute();
 
         assertTrue( aClassFile.exists() );
         assertTrue( aDescriptorClassFile.exists() );
@@ -81,9 +81,9 @@ public class CodeGeneratorMojoTest
         throws MojoExecutionException
     {
 
-        codeGeneratorMojo.setSchema( getPathTo( "src/test/resources/vacuumd-configuration.xsd" ) );
-        codeGeneratorMojo.setProperties( getPathTo( "src/test/resources/castorbuilder.properties" ) );
-        codeGeneratorMojo.execute();
+        generateMojo.setSchema( getPathTo( "src/test/resources/vacuumd-configuration.xsd" ) );
+        generateMojo.setProperties( getPathTo( "src/test/resources/castorbuilder.properties" ) );
+        generateMojo.execute();
 
         assertFalse( new File( GENERATED_DIR, "Actions.java" ).exists() );
     }
@@ -98,9 +98,9 @@ public class CodeGeneratorMojoTest
     {
         File timeStampFile = getTimeStampFile();
 
-        codeGeneratorMojo.setPackaging( "org.codehaus.mojo.castor" );
-        codeGeneratorMojo.setSchema( MAPPING_XSD );
-        codeGeneratorMojo.execute();
+        generateMojo.setPackaging( "org.codehaus.mojo.castor" );
+        generateMojo.setSchema( MAPPING_XSD );
+        generateMojo.execute();
 
         assertTrue( aClassFile.exists() );
         assertTrue( aDescriptorClassFile.exists() );
@@ -113,9 +113,9 @@ public class CodeGeneratorMojoTest
     {
         File timeStampFile = getTimeStampFile();
 
-        codeGeneratorMojo.setPackaging( "org.codehaus.mojo.castor" );
-        codeGeneratorMojo.setSchema( MAPPING_XSD );
-        codeGeneratorMojo.execute();
+        generateMojo.setPackaging( "org.codehaus.mojo.castor" );
+        generateMojo.setSchema( MAPPING_XSD );
+        generateMojo.execute();
 
         assertTrue( aClassFile.exists() );
         assertTrue( aDescriptorClassFile.exists() );
@@ -129,9 +129,9 @@ public class CodeGeneratorMojoTest
     {
         File timeStampFile = createTimeStampWithTime( timestampOf( MAPPING_XSD ) - 1 );
 
-        codeGeneratorMojo.setPackaging( "org.codehaus.mojo.castor" );
-        codeGeneratorMojo.setSchema( MAPPING_XSD );
-        codeGeneratorMojo.execute();
+        generateMojo.setPackaging( "org.codehaus.mojo.castor" );
+        generateMojo.setSchema( MAPPING_XSD );
+        generateMojo.execute();
 
         assertTrue( aClassFile.exists() );
         assertTrue( aDescriptorClassFile.exists() );
@@ -161,9 +161,9 @@ public class CodeGeneratorMojoTest
     {
         File timeStampFile = createTimeStampWithTime( timestampOf( MAPPING_XSD ) + 1 );
 
-        codeGeneratorMojo.setPackaging( "org.codehaus.mojo.castor" );
-        codeGeneratorMojo.setSchema( MAPPING_XSD );
-        codeGeneratorMojo.execute();
+        generateMojo.setPackaging( "org.codehaus.mojo.castor" );
+        generateMojo.setSchema( MAPPING_XSD );
+        generateMojo.execute();
 
         assertTrue( !aClassFile.exists() );
         assertTrue( !aDescriptorClassFile.exists() );
@@ -180,38 +180,38 @@ public class CodeGeneratorMojoTest
 
     public void testDestProperty()
     {
-        codeGeneratorMojo.setDest( "testString" );
-        assertEquals( "testString", codeGeneratorMojo.getDest() );
+        generateMojo.setDest( "testString" );
+        assertEquals( "testString", generateMojo.getDest() );
     }
 
     public void testTStampProperty()
     {
-        codeGeneratorMojo.setTstamp( "testString" );
-        assertEquals( "testString", codeGeneratorMojo.getTstamp() );
+        generateMojo.setTstamp( "testString" );
+        assertEquals( "testString", generateMojo.getTstamp() );
     }
 
     public void testSchemaProperty()
     {
-        codeGeneratorMojo.setSchema( "teststring" );
-        assertEquals( "teststring", codeGeneratorMojo.getSchema() );
+        generateMojo.setSchema( "teststring" );
+        assertEquals( "teststring", generateMojo.getSchema() );
     }
 
     public void testPackagingProperty()
     {
-        codeGeneratorMojo.setPackaging( "teststring" );
-        assertEquals( "teststring", codeGeneratorMojo.getPackaging() );
+        generateMojo.setPackaging( "teststring" );
+        assertEquals( "teststring", generateMojo.getPackaging() );
     }
 
     public void testTypesProperty()
     {
-        codeGeneratorMojo.setTypes( "teststring" );
-        assertEquals( "teststring", codeGeneratorMojo.getTypes() );
+        generateMojo.setTypes( "teststring" );
+        assertEquals( "teststring", generateMojo.getTypes() );
     }
 
     public void testMarshalProperty()
     {
-        codeGeneratorMojo.setMarshal( true );
-        assertTrue( codeGeneratorMojo.getMarshal() );
+        generateMojo.setMarshal( true );
+        assertTrue( generateMojo.getMarshal() );
     }
 
     private String getPathTo( String relativePath )

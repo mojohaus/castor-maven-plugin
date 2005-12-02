@@ -45,7 +45,7 @@ import org.codehaus.plexus.util.FileUtils;
  * @author jesse <jesse.mcconnell@gmail.com>
 
  */
-public class CodeGeneratorMojo
+public class GenerateMojo
     extends AbstractMojo
 {
 
