@@ -60,8 +60,8 @@ public class GenerateMojoTest
         throws IOException
     {
         generateMojo = null;
-        FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
-        FileUtils.deleteDirectory( new File( TIMESTAMP_DIR ) );
+        //FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
+        //FileUtils.deleteDirectory( new File( TIMESTAMP_DIR ) );
     }
 
     public void testExecute()
@@ -83,6 +83,7 @@ public class GenerateMojoTest
 
         generateMojo.setSchema( getPathTo( "src/test/resources/vacuumd-configuration.xsd" ) );
         generateMojo.setProperties( getPathTo( "src/test/resources/castorbuilder.properties" ) );
+        generateMojo.setTypes("arraylist");
         generateMojo.execute();
 
         assertFalse( new File( GENERATED_DIR, "Actions.java" ).exists() );

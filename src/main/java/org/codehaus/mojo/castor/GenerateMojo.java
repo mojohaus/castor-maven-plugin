@@ -103,11 +103,9 @@ public class GenerateMojo
     /**
      * Castor collection types. Allowable values are 'vector', 'arraylist', 'j2' or 'odmg'
      * 'j2' and 'arraylist' are the same.
-     * @parameter default-value="vector";
-     * @todo Since everyone is using Java2 'arraylist' would be a better default but I left this 
-     * for backwards compatibility
+     * @parameter default-value="arraylist";
      */
-    private String types = "vector";
+    private String types = "arraylist";
 
     /**
      * If true, generate descriptors
@@ -287,6 +285,8 @@ public class GenerateMojo
         }
 
         sgen.setBuilderProperties( properties );
+        
+        
     }
 
     /**

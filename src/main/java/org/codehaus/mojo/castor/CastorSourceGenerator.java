@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.exolab.castor.builder.CollectionInfo;
 import org.exolab.castor.builder.FieldInfoFactory;
 import org.exolab.castor.builder.SourceGenerator;
 import org.exolab.castor.builder.binding.ExtendedBinding;
@@ -29,19 +31,30 @@ class CastorSourceGenerator
 {
     private Log log;
 
+    // we need to save this in order to override its properties later
+    // since SourceGenerator doesn't give us access to this and 
+    // the properties are only read during the constructor call
+    private FieldInfoFactory fieldInfoFactory;
+
+    // base class does not provide access to this variable to we intercept
+    // setting it and store its value here
+    private boolean verbose;
+
     public CastorSourceGenerator()
     {
-        super();
+        this( new FieldInfoFactory() );
     }
 
     public CastorSourceGenerator( FieldInfoFactory fieldInfoFactory )
     {
         super( fieldInfoFactory );
+        this.fieldInfoFactory = fieldInfoFactory;
     }
 
     public CastorSourceGenerator( FieldInfoFactory fieldInfoFactory, ExtendedBinding extendedBinding )
     {
         super( fieldInfoFactory, extendedBinding );
+        this.fieldInfoFactory = fieldInfoFactory;
     }
 
     public void generateSource( InputSource source, String packageName )
@@ -93,7 +106,7 @@ class CastorSourceGenerator
             if ( "".equals( packageName ) )
                 packageName = null;
         }
-        
+
         generateSource( schema, packageName );
     }
 
@@ -144,6 +157,12 @@ class CastorSourceGenerator
         getLog().info( msg );
     }
 
+    public void verbose( String msg )
+    {
+        if ( verbose )
+            getLog().info( msg );
+    }
+
     public void setLineSeparatorStyle( String lineSeparator )
         throws MojoExecutionException
     {
@@ -172,6 +191,12 @@ class CastorSourceGenerator
             }
         }
         setLineSeparator( lineSep );
+    }
+
+    public void setVerbose( boolean verbose )
+    {
+        this.verbose = verbose;
+        super.setVerbose( verbose );
     }
 
     public void setBindingFile( String bindingFile )
@@ -203,6 +228,26 @@ class CastorSourceGenerator
                 throw new MojoExecutionException( "Can't read properties file \"" + filePath + "\": " + e );
             }
             setDefaultProperties( customProperties );
+
+            // these properties are read at contstruction time and copied into FieldInfoFactory 
+            // se we set them directly in the fieldInfoFactory here.
+            if ( generateExtraCollectionMethods() )
+            {
+                verbose( "Overriding default castorbuilder.properties and setting createExtraMethods to true" );
+                fieldInfoFactory.setCreateExtraMethods( true );
+            }
+
+            String suffix = getProperty( CollectionInfo.REFERENCE_SUFFIX_PROPERTY, null );
+            if ( suffix != null )
+                verbose( "Overriding default castorbuilder.properties and setting referenceSuffixProperty to " + suffix );
+            fieldInfoFactory.setReferenceMethodSuffix( suffix );
+
+            if ( boundPropertiesEnabled() )
+            {
+                verbose( "Overriding default castorbuilder.properties and setting boundProperties to true" );
+                fieldInfoFactory.setBoundProperties( true );
+            }
+
         }
     }
 
