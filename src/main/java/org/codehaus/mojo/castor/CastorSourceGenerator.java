@@ -58,7 +58,6 @@ class CastorSourceGenerator
     }
 
     public void generateSource( InputSource source, String packageName )
-        throws IOException
     {
         Parser parser = null;
         try

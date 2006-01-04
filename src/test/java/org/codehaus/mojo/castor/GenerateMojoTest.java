@@ -102,12 +102,13 @@ public class GenerateMojoTest
         generateMojo.setPackaging( "org.codehaus.mojo.castor" );
         generateMojo.setSchema( MAPPING_XSD );
         generateMojo.execute();
-
+        
         assertTrue( aClassFile.exists() );
         assertTrue( aDescriptorClassFile.exists() );
         assertTrue( timeStampFile.exists() );
 
     }
+       
 
     public void testCreateTimeStampFolder()
         throws MojoExecutionException
