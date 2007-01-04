@@ -17,13 +17,19 @@ package org.codehaus.mojo.castor;
  */
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.channels.FileChannel;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.util.IOUtil;
 
 public class GenerateMojoTest
     extends PlexusTestCase
@@ -76,8 +82,30 @@ public class GenerateMojoTest
         assertTrue( aDescriptorClassFile.exists() );
 
     }
+    
+    // MCASTOR-5 issue
+    public void testForGetContent() throws Exception {
+    	
+        generateMojo.setSchema( getPathTo( "src/test/resources/availability_report.xsd" ) );
+        generateMojo.setProperties( getPathTo( "src/test/resources/castorbuilder.properties" ) );
+        generateMojo.setTypes("arraylist");
+        generateMojo.execute();
 
-    public void testEmptyPackage()
+        File generatedClass = new File( GENERATED_DIR + "/org/opennms/report/availability", "Created.java" );
+		assertTrue( "Expected " + generatedClass + " to exist.", generatedClass.exists() );
+		assertFileContains( generatedClass, "getContent" );
+		
+    }
+
+    private void assertFileContains( File file, String string ) throws IOException {
+    	
+    	String contents = FileUtils.readFileToString( file, "ISO-8859-1" );
+    	assertTrue( "Expected " + file + " to contain string " + string, contents.contains( string ) );
+    	
+	}
+    
+
+	public void testEmptyPackage()
         throws MojoExecutionException
     {
 

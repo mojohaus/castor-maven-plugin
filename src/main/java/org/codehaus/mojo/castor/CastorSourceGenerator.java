@@ -106,7 +106,11 @@ class CastorSourceGenerator
                 packageName = null;
         }
 
-        generateSource( schema, packageName );
+        try {
+			generateSource( schema, packageName );
+		} catch (IOException e) {
+            throw new RuntimeException( "Unable to generate source.\n" + e, e );
+		}
     }
 
     public static CastorSourceGenerator createSourceGenerator( String types )
