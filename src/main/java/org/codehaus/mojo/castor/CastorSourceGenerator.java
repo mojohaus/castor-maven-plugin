@@ -4,12 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
-import org.exolab.castor.builder.CollectionInfo;
+import org.exolab.castor.builder.info.CollectionInfo;
 import org.exolab.castor.builder.FieldInfoFactory;
 import org.exolab.castor.builder.SourceGenerator;
 import org.exolab.castor.builder.binding.ExtendedBinding;
@@ -24,7 +23,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Override Castor's SourceGenerator to inject exception handling.
- * Code based on castor-0.9.5.3-xml.jar
+ * Code based on Castor XML code generator, release 1.1-M2
  */
 class CastorSourceGenerator
     extends SourceGenerator

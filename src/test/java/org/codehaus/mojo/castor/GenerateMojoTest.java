@@ -50,11 +50,11 @@ public class GenerateMojoTest
     public void setUp()
         throws IOException
     {
-        FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
+       // FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
         FileUtils.deleteDirectory( new File( TIMESTAMP_DIR ) );
 
         aClassFile = new File( GENERATED_DIR, "org/codehaus/mojo/castor/A.java" );
-        aDescriptorClassFile = new File( GENERATED_DIR, "org/codehaus/mojo/castor/ADescriptor.java" );
+        aDescriptorClassFile = new File( GENERATED_DIR, "org/codehaus/mojo/castor/descriptors/ADescriptor.java" );
 
         generateMojo = new GenerateMojo();
         generateMojo.setProject( new MavenProject( new Model() ) );
@@ -100,7 +100,8 @@ public class GenerateMojoTest
     private void assertFileContains( File file, String string ) throws IOException {
     	
     	String contents = FileUtils.readFileToString( file, "ISO-8859-1" );
-    	assertTrue( "Expected " + file + " to contain string " + string, contents.contains( string ) );
+        boolean contains = (contents.indexOf(string) > -1);
+    	assertTrue( "Expected " + file + " to contain string " + string, contains );
     	
 	}
     
