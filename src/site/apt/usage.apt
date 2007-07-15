@@ -1,5 +1,5 @@
  ------
- Maven 2 Castor plugin 
+ Usage 
  ------
  <brozow@opennms.org>
  ------
@@ -8,15 +8,13 @@
 
 Using the Castor Plugin
 
-	The castor plugin is a maven plugin that provides the functionality of Castor's
-	SourceGenerator for generating Java beans and associated Marshallers and Unmarshallers
-	from XML Schema files.  This document isn't intend to be a tutorial on the use of Castor
+	This document isn't intended to be a tutorial on the use of Castor
 	but rather on the use of the plugin.  For more details on using Castor see
 	{{http://castor.codehaus.org/xml-framework.html}}.
  
 * Overview
 
-	The easiest way to use the castor plugin is to place your <<<*.xsd>>> files in
+	The easiest way to use the Castor plugin is to place your <<<*.xsd>>> files in
 	<<<$\{schemaDirectory\}>>> (by default <<<src/main/castor>>>).  All <<<*.xsd>>> files in this 
 	directory will have java source generated for them along the appropriate descriptors and
 	marshallers.  This code will be generated into the directory specified by <<<$\{dest\}>>>
@@ -35,7 +33,7 @@ Using the Castor Plugin
 	
 * Minimal configuration
 
-	This configuratin generates java code for all *.xsds in <<<src/main/castor>>> to the package
+	This configuration generates java code for all *.xsds in <<<src/main/castor>>> to the package
 	specified in src/main/castor/castorbuilder.properties or the default package depending on the
 	contents of castorbuilder.properties.
 
@@ -43,23 +41,23 @@ Using the Castor Plugin
 	
 +-------------------
 <project>
-   ...
-      <build>
-         <plugins>
-            <plugin>
-               <groupId>org.codehaus.mojo</groupId>
-               <artifactId>castor-maven-plugin</artifactId>
-               <version>1.0</version>
-               <executions>
-               	<execution>
-               	  <goal>generate</goal>
-               	</execution>
-               <executions>
-            </plugin>
-         </plugins>
-         ...
-      </build>
-   ...
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>castor-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <goal>generate</goal>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    ...
+  </build>
+  ...
 </project>
 +-------------------
 
@@ -72,27 +70,27 @@ Using the Castor Plugin
 	
 +-------------------
 <project>
-   ...
-      <build>
-         <plugins>
-            <plugin>
-               <groupId>org.codehaus.mojo</groupId>
-               <artifactId>castor-maven-plugin</artifactId>
-               <version>1.0</version>
-               <executions>
-               	<execution>
-               	  <goal>generate</goal>
-               	  <configuration>
-               	  	<schema>src/main/castor/schema.xsd</schema>
-               	  	<packaging>org.codehaus.example.schema</packaging>
-               	  </configuration>
-               	</execution>
-               <executions>
-            </plugin>
-         </plugins>
-         ...
-      </build>
-   ...
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>castor-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <goal>generate</goal>
+            <configuration>
+              <schema>src/main/castor/schema.xsd</schema>
+              <packaging>org.codehaus.example.schema</packaging>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    ...
+  </build>
+  ...
 </project>
 +-------------------
 

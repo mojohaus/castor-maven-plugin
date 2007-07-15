@@ -34,8 +34,8 @@ import org.codehaus.plexus.compiler.util.scan.mapping.SuffixMapping;
 import org.codehaus.plexus.util.FileUtils;
 
 /**
- * A mojo that uses castor to generate a collection of javabeans from an XSD using Castor.  Detailed
- * explainations of many of these can be found in the details fo the Castor 
+ * A mojo that uses Castor to generate a collection of javabeans from an XSD.  Detailed
+ * explanations of many of these can be found in the details for the Castor 
  * <a href="http://castor.codehaus.org/sourcegen.html">SourceGenerator</a>.
  * 
  * @goal generate
@@ -43,7 +43,6 @@ import org.codehaus.plexus.util.FileUtils;
  * @description Castor plugin
  * @author brozow <brozow@opennms.org>
  * @author jesse <jesse.mcconnell@gmail.com>
-
  */
 public class GenerateMojo
     extends AbstractMojo
