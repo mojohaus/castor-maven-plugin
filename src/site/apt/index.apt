@@ -19,7 +19,7 @@
 ~~ limitations under the License.
 
 
-Maven Castor Plugin
+Castor Maven Plugin
 
   The Castor plugin is a Maven plugin that provides the functionality of
   Castor's SourceGenerator for generating Java beans and associated Marshallers
@@ -35,4 +35,4 @@ Maven Castor Plugin
 
 * Usage
 
-  Instructions on how to use the Castor Plugin can be found {{{usage.html}here}}.
+  Instructions on how to use the Castor Maven Plugin can be found {{{usage.html}here}}.
