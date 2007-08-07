@@ -5,13 +5,13 @@
   <parent>
     <artifactId>mojo</artifactId>
     <groupId>org.codehaus.mojo</groupId>
-    <version>16-SNAPSHOT</version>
+    <version>15</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>castor-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
   <name>Castor Maven Plugin</name>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.1-SNAPSHOT</version>
   <prerequisites>
     <maven>2.0</maven>
   </prerequisites>
@@ -74,7 +74,7 @@
     <dependency>
       <groupId>org.codehaus.castor</groupId>
       <artifactId>castor-codegen</artifactId>
-      <version>1.1-M3-SNAPSHOT</version>
+      <version>1.1.2.1</version>
     </dependency>
     <dependency>
       <groupId>plexus</groupId>

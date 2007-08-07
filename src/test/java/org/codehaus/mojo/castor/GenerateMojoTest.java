@@ -17,19 +17,13 @@ package org.codehaus.mojo.castor;
  */
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.channels.FileChannel;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.util.IOUtil;
 
 public class GenerateMojoTest
     extends PlexusTestCase
@@ -50,8 +44,7 @@ public class GenerateMojoTest
     public void setUp()
         throws IOException
     {
-       // FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
-        FileUtils.deleteDirectory( new File( TIMESTAMP_DIR ) );
+    	FileUtils.deleteDirectory( new File( getBasedir() + "/target/test" ) );
 
         aClassFile = new File( GENERATED_DIR, "org/codehaus/mojo/castor/A.java" );
         aDescriptorClassFile = new File( GENERATED_DIR, "org/codehaus/mojo/castor/descriptors/ADescriptor.java" );
