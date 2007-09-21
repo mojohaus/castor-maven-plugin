@@ -59,8 +59,8 @@ public class GenerateMojoTest
         throws IOException
     {
         generateMojo = null;
-        //FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
-        //FileUtils.deleteDirectory( new File( TIMESTAMP_DIR ) );
+//        FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
+//        FileUtils.deleteDirectory( new File( TIMESTAMP_DIR ) );
     }
 
     public void testExecute()
@@ -109,6 +109,34 @@ public class GenerateMojoTest
         generateMojo.execute();
 
         assertFalse( new File( GENERATED_DIR, "Actions.java" ).exists() );
+    }
+
+//	public void testGenerateImportedSchemasDisabled()
+//	throws MojoExecutionException
+//	{
+//
+//	    generateMojo.setSchema( getPathTo( "src/test/resources/main.xsd" ) );
+//	    generateMojo.setProperties( getPathTo( "src/test/resources/castorbuilder.properties" ) );
+//	    generateMojo.setTypes("arraylist");
+//	    generateMojo.setGenerateImportedSchemas(false);
+//	    generateMojo.execute();
+//
+//	    assertTrue( new File( GENERATED_DIR, "Main.java" ).exists() );
+////	    assertFalse( new File( GENERATED_DIR, "MainType.java" ).exists() );
+//	}
+
+    public void testGenerateImportedSchemasEnabled()
+        throws MojoExecutionException
+    {
+
+        generateMojo.setSchema(getPathTo("src/test/resources/main.xsd"));
+        generateMojo.setProperties(getPathTo("src/test/resources/castorbuilder.properties"));
+        generateMojo.setTypes("arraylist");
+        generateMojo.setGenerateImportedSchemas(true);
+        generateMojo.execute();
+
+        assertTrue(new File(GENERATED_DIR, "Main.java").exists());
+        assertTrue(new File(GENERATED_DIR, "MainType.java").exists());
     }
 
     private File getTimeStampFile()

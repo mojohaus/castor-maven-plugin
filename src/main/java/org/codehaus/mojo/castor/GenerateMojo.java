@@ -147,6 +147,12 @@ public class GenerateMojo
      * @parameter
      */
     private String packaging;
+    
+    /**
+     * Whether to generate Java classes fro imported XML schemas or not.
+     * @parameter default-value="false"
+     */
+    private boolean generateImportedSchemas = false;
 
     /**
      * @parameter expression="${project}"
@@ -285,7 +291,7 @@ public class GenerateMojo
 
         sgen.setBuilderProperties( properties );
         
-        
+        sgen.setGenerateImportedSchemas( generateImportedSchemas );
     }
 
     /**
@@ -382,6 +388,14 @@ public class GenerateMojo
     public void setMarshal( boolean marshal )
     {
         this.marshal = marshal;
+    }
+    
+    public boolean isGenerateImportedSchemas() {
+        return generateImportedSchemas;
+    }
+
+    public void setGenerateImportedSchemas(boolean generateImportedSchemas) {
+        this.generateImportedSchemas = generateImportedSchemas;
     }
 
     public MavenProject getProject()
