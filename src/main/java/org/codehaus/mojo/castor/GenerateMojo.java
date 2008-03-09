@@ -86,7 +86,7 @@ public class GenerateMojo
      * The directory to store the processed xsds.  The timestamps of these xsds
      * are used to determine if the source for that xsd need to be regenerated
      * 
-     * @parameter expression="${basedir}/target/xsds"
+     * @parameter expression="${project.build.directory}/xsds"
      * @todo timestampDirectory would be a better name for this. Used this name for backward compatibility
      */
     private String tstamp;
@@ -221,7 +221,11 @@ public class GenerateMojo
             File targetFile = new File( getTimeStampDirectory(), sourceFile.getName() );
             if ( !targetFile.exists() || ( targetFile.lastModified() + staleMillis < sourceFile.lastModified() ) )
             {
+                getLog().debug( "Finding XSDs - adding schema " + targetFile );
                 staleSources.add( sourceFile );
+            } else
+            {
+                getLog().debug( "Finding XSDs - adding schema " + targetFile );
             }
         }
         else
@@ -238,6 +242,8 @@ public class GenerateMojo
 
             try
             {
+                getLog().debug( "Finding XSDs - adding scanned XSDs from schemaDir " + schemaDir
+                        + " tstampDir " + tstampDir );
                 staleSources.addAll( scanner.getIncludedSources( schemaDir, tstampDir ) );
             }
             catch ( InclusionScanException e )
