@@ -84,20 +84,48 @@
       <version>1.0</version>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.castor</groupId>
-      <artifactId>castor-codegen</artifactId>
-      <version>1.1.2.1</version>
-    </dependency>
-    <dependency>
-      <groupId>plexus</groupId>
+      <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.4</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-plugin-testing-harness</artifactId>
       <version>1.1</version>
       <scope>test</scope>
-    </dependency>	
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.castor</groupId>
+      <artifactId>castor-codegen</artifactId>
+      <version>1.2</version>
+    </dependency>
+    <dependency>
+        <groupId>velocity</groupId>
+        <artifactId>velocity</artifactId>
+        <version>1.5</version>	
+    </dependency>
   </dependencies>
+  
+    <profiles>
+        <profile>
+            <activation>
+                <jdk>1.4</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                    <version>2.6.2</version>
+                    <exclusions>
+                        <exclusion>
+                            <artifactId>xml-apis</artifactId>
+                            <groupId>xml-apis</groupId>
+                        </exclusion>
+                    </exclusions>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+  
 </project>
