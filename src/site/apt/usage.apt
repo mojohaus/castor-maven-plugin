@@ -50,7 +50,9 @@ Usage
         <version>1.0</version>
         <executions>
           <execution>
-            <goal>generate</goal>
+            <goals>
+              <goal>generate</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
