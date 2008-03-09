@@ -19,6 +19,7 @@ package org.codehaus.mojo.castor;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -77,6 +78,23 @@ public abstract class AbstractMappingMojo
             ClassLoader cl = getProjectClassLoader();
 
             MappingTool tool = new MappingTool();
+
+            // As of Castor 1.2, an InternalContext needs to be set; using reflection
+            // to set it or not
+            Class internalContextClass;
+            try {
+                internalContextClass = Class.forName( "org.castor.xml.InternalContext" );
+                Class backwardsCompatibilityClass = 
+                    Class.forName( "org.castor.xml.BackwardCompatibilityContext" );
+                Method setter = MappingTool.class.getMethod( "setInternalContext", new Class[] { internalContextClass } );
+                if ( setter != null ) {
+                    getLog().info( "About to invoke 'setInternalContext()' on org.exolab.castor.tools.MappingTool" );
+                    setter.invoke( tool, new Object[] { backwardsCompatibilityClass.newInstance() } );
+                }
+            } catch ( ClassNotFoundException e ) {
+                // nothing to do as we check whether the class(es) exist or not
+            }
+
             Class clazz = cl.loadClass( getClassName() );
             tool.addClass( clazz );
 
