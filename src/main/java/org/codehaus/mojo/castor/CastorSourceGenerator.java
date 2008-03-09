@@ -12,14 +12,6 @@ import org.exolab.castor.builder.SourceGenerator;
 import org.exolab.castor.builder.binding.ExtendedBinding;
 import org.exolab.castor.builder.factory.FieldInfoFactory;
 import org.exolab.castor.builder.info.CollectionInfo;
-import org.exolab.castor.util.LocalConfiguration;
-import org.exolab.castor.xml.XMLException;
-import org.exolab.castor.xml.schema.Schema;
-import org.exolab.castor.xml.schema.reader.Sax2ComponentReader;
-import org.exolab.castor.xml.schema.reader.SchemaUnmarshaller;
-import org.xml.sax.InputSource;
-import org.xml.sax.Parser;
-import org.xml.sax.SAXException;
 
 /**
  * Override Castor's SourceGenerator to inject exception handling.
@@ -79,70 +71,6 @@ class CastorSourceGenerator
     {
         super( fieldInfoFactory, extendedBinding );
         this.fieldInfoFactory = fieldInfoFactory;
-    }
-
-    /**
-     * @see org.exolab.castor.builder.SourceGenerator#generateSource(org.xml.sax.InputSource, java.lang.String)
-     */
-    public void generateSource( InputSource source, String packageName )
-    {
-        Parser parser = null;
-        try
-        {
-            parser = LocalConfiguration.getInstance().getParser();
-        }
-        catch ( RuntimeException e )
-        {
-            throw new RuntimeException( "Unable to create SAX parser.", e );
-        }
-        if ( parser == null )
-        {
-            throw new RuntimeException( "Unable to create SAX parser." );
-        }
-
-        SchemaUnmarshaller schemaUnmarshaller = null;
-        try
-        {
-            schemaUnmarshaller = new SchemaUnmarshaller();
-        }
-        catch ( XMLException e )
-        {
-            throw new RuntimeException( "Unable to create schema unmarshaller.", e );
-        }
-
-        Sax2ComponentReader handler = new Sax2ComponentReader( schemaUnmarshaller );
-        parser.setDocumentHandler( handler );
-        parser.setErrorHandler( handler );
-        try
-        {
-            parser.parse( source );
-        }
-        catch ( IOException e )
-        {
-            throw new RuntimeException( "Can't read input file " + source.getSystemId() + ".\n" + e, e );
-        }
-        catch ( SAXException e )
-        {
-            throw new RuntimeException( "Can't parse input file " + source.getSystemId() + ".\n" + e, e );
-        }
-        Schema schema = schemaUnmarshaller.getSchema();
-        if ( packageName == null && schema.getTargetNamespace() != null )
-        {
-            packageName = lookupPackageByNamespace( schema.getTargetNamespace() );
-            if ( "".equals( packageName ) )
-            {
-                packageName = null;
-            }
-        }
-
-        try 
-        {
-            generateSource( schema, packageName );
-        } 
-        catch ( IOException e ) 
-        {
-            throw new RuntimeException( "Unable to generate source.\n" + e, e );
-        }
     }
 
     /**
@@ -271,26 +199,23 @@ class CastorSourceGenerator
      * Sets a user-specific binding file to be used during code generation.
      * @param bindingFile A user-specified binding file.
      */
-    public void setBindingFile( String bindingFile )
+    public void setBindingFile( final File bindingFile )
     {
-        if ( bindingFile != null && new File( bindingFile ).exists() )
-        {
-            setBinding( bindingFile );
-        }
+        setBinding( bindingFile.getAbsolutePath() );
     }
 
     /**
-     * Sets user-specific code generator properties for the code genration process.
+     * Sets user-specific code generator properties for the code generation process.
      * @param properties User-specific code generator properties.
      * @throws MojoExecutionException Indicates that the user-specific properties cannot be accessed.
      */
-    public void setBuilderProperties( String properties )
+    public void setBuilderProperties( File properties )
         throws MojoExecutionException
     {
         // Set Builder Properties;
         if ( properties != null )
         {
-            String filePath = new File( properties ).getAbsolutePath();
+            String filePath = properties.getAbsolutePath();
             Properties customProperties = new Properties();
             try
             {
