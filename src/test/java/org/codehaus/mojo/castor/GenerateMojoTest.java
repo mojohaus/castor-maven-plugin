@@ -68,7 +68,7 @@ public class GenerateMojoTest
     {
 
         generateMojo.setPackaging( "org.codehaus.mojo.castor" );
-        generateMojo.setSchema( MAPPING_XSD );
+        generateMojo.setSchema( new File (MAPPING_XSD ) );
         generateMojo.execute();
 
         assertTrue( aClassFile.exists() );
@@ -79,8 +79,8 @@ public class GenerateMojoTest
     // MCASTOR-5 issue
     public void testForGetContent() throws Exception {
     	
-        generateMojo.setSchema( getPathTo( "src/test/resources/availability_report.xsd" ) );
-        generateMojo.setProperties( getPathTo( "src/test/resources/castorbuilder.properties" ) );
+        generateMojo.setSchema( new File (getPathTo( "src/test/resources/availability_report.xsd" ) ) );
+        generateMojo.setProperties( new File (getPathTo( "src/test/resources/castorbuilder.properties" ) ) );
         generateMojo.setTypes("arraylist");
         generateMojo.execute();
 
@@ -103,12 +103,12 @@ public class GenerateMojoTest
         throws MojoExecutionException
     {
 
-        generateMojo.setSchema( getPathTo( "src/test/resources/vacuumd-configuration.xsd" ) );
-        generateMojo.setProperties( getPathTo( "src/test/resources/castorbuilder.properties" ) );
+        generateMojo.setSchema( new File (getPathTo( "src/test/resources/vacuumd-configuration.xsd" ) ) );
+        generateMojo.setProperties( new File ( getPathTo( "src/test/resources/castorbuilder.properties" ) ) );
         generateMojo.setTypes("arraylist");
         generateMojo.execute();
 
-        assertFalse( new File( GENERATED_DIR, "Actions.java" ).exists() );
+        assertTrue( new File( GENERATED_DIR, "Actions.java" ).exists() );
     }
 
 //	public void testGenerateImportedSchemasDisabled()
@@ -129,8 +129,8 @@ public class GenerateMojoTest
         throws MojoExecutionException
     {
 
-        generateMojo.setSchema(getPathTo("src/test/resources/main.xsd"));
-        generateMojo.setProperties(getPathTo("src/test/resources/castorbuilder.properties"));
+        generateMojo.setSchema( new File ( getPathTo("src/test/resources/main.xsd") ) );
+        generateMojo.setProperties( new File ( getPathTo("src/test/resources/castorbuilder.properties") ) );
         generateMojo.setTypes("arraylist");
         generateMojo.setGenerateImportedSchemas(true);
         generateMojo.execute();
@@ -150,7 +150,7 @@ public class GenerateMojoTest
         File timeStampFile = getTimeStampFile();
 
         generateMojo.setPackaging( "org.codehaus.mojo.castor" );
-        generateMojo.setSchema( MAPPING_XSD );
+        generateMojo.setSchema( new File ( MAPPING_XSD ) );
         generateMojo.execute();
         
         assertTrue( aClassFile.exists() );
@@ -166,7 +166,7 @@ public class GenerateMojoTest
         File timeStampFile = getTimeStampFile();
 
         generateMojo.setPackaging( "org.codehaus.mojo.castor" );
-        generateMojo.setSchema( MAPPING_XSD );
+        generateMojo.setSchema( new File ( MAPPING_XSD ) );
         generateMojo.execute();
 
         assertTrue( aClassFile.exists() );
@@ -214,7 +214,7 @@ public class GenerateMojoTest
         File timeStampFile = createTimeStampWithTime( timestampOf( MAPPING_XSD ) + 1 );
 
         generateMojo.setPackaging( "org.codehaus.mojo.castor" );
-        generateMojo.setSchema( MAPPING_XSD );
+        generateMojo.setSchema( new File ( MAPPING_XSD ) );
         generateMojo.execute();
 
         assertTrue( !aClassFile.exists() );
@@ -244,8 +244,8 @@ public class GenerateMojoTest
 
     public void testSchemaProperty()
     {
-        generateMojo.setSchema( "teststring" );
-        assertEquals( "teststring", generateMojo.getSchema() );
+        generateMojo.setSchema( new File ( "teststring" ) );
+        assertEquals( "teststring", generateMojo.getSchema().toString() );
     }
 
     public void testPackagingProperty()

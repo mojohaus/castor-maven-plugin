@@ -52,12 +52,13 @@ public class GenerateMojo
 
     private static final String DISABLE_MARSHALL_MSG = "Disabling generation of Marshalling framework methods (marshall, unmarshall, validate).";
 
+    private static final String DEFAULT_PROPERTY_FILE_LOCATION = "src/main/castor/castorbuilder.properties";
     /**
      * The binding file to use for mapping xml to java.
      * 
      * @parameter expression="${basedir}/src/main/castor/bindings.xml"
      */
-    private String bindingfile;
+    private File bindingfile;
 
     /**
      * A schema file to process.  If this is not set then all .xsd files in
@@ -65,7 +66,7 @@ public class GenerateMojo
      * 
      * @parameter
      */
-    private String schema;
+    private File schema;
 
     /**
      * The source directory containing *.xsd files
@@ -140,7 +141,7 @@ public class GenerateMojo
      * The castorbuilder.properties file to use
      * @parameter expression="${basedir}/src/main/castor/castorbuilder.properties"
      */
-    private String properties;
+    private File properties;
 
     /**
      * The package for the generated source
@@ -215,9 +216,9 @@ public class GenerateMojo
     {
         Set staleSources = new HashSet();
 
-        if ( schema != null )
+        if ( schema != null && schema.exists())
         {
-            File sourceFile = new File( schema );
+            File sourceFile = schema;
             File targetFile = new File( getTimeStampDirectory(), sourceFile.getName() );
             if ( !targetFile.exists() || ( targetFile.lastModified() + staleMillis < sourceFile.lastModified() ) )
             {
@@ -277,7 +278,9 @@ public class GenerateMojo
 
         sgen.setDestDir( dest );
 
-        sgen.setBindingFile( bindingfile );
+        if (bindingfile != null && bindingfile.exists()) {
+            sgen.setBindingFile( bindingfile );
+        }
 
         sgen.setVerbose( verbose );
 
@@ -295,7 +298,21 @@ public class GenerateMojo
             log( DISABLE_MARSHALL_MSG );
         }
 
-        sgen.setBuilderProperties( properties );
+        if ( properties != null && properties.exists() ) {
+            sgen.setBuilderProperties( properties );
+        } else {
+            File defaultPropertyFile = 
+                new File ( getProject().getBasedir(), DEFAULT_PROPERTY_FILE_LOCATION );
+            if ( properties != null && !properties.equals( defaultPropertyFile ) ) {
+                getLog().warn( "Cannot find custom builder property file " + 
+                        properties.getAbsolutePath() );
+                throw new MojoExecutionException("Cannot find custom builder property file " + 
+                        properties.getAbsolutePath() );
+            } else if ( properties != null) {
+                getLog().info( "There is no custom builder property file at " +
+                		"the default location at " + properties.getAbsolutePath() );
+            }
+        }
         
         sgen.setGenerateImportedSchemas( generateImportedSchemas );
     }
@@ -362,12 +379,12 @@ public class GenerateMojo
         this.packaging = packaging;
     }
 
-    public String getSchema()
+    public File getSchema()
     {
         return schema;
     }
 
-    public void setSchema( String schema )
+    public void setSchema( File schema )
     {
         this.schema = schema;
     }
@@ -381,8 +398,12 @@ public class GenerateMojo
     {
         this.types = types;
     }
-    
-    public void setProperties(String properties) {
+
+    public void setBindingfile( final File bindingfile ) {
+        this.bindingfile = bindingfile;
+    }
+
+    public void setProperties( final File properties ) {
         this.properties = properties;
     }
 
