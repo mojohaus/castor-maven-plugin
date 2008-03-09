@@ -46,6 +46,14 @@
       <organization>The OpenNMS Group</organization>
       <timezone>-5 GMT</timezone>
     </developer>
+    <developer>
+      <id>wguttmn</id>
+      <name>Werner Guttmann</name>
+      <email>wguttmn@codehaus.org</email>
+      <url>http://www.indoqa.com</url>
+      <organization>Indoqa Ltd.</organization>
+      <timezone>+1 GMT</timezone>
+    </developer>
   </developers>
   <contributors>
     <contributor>
