@@ -32,6 +32,7 @@ import org.codehaus.plexus.compiler.util.scan.StaleSourceScanner;
 import org.codehaus.plexus.compiler.util.scan.mapping.SourceMapping;
 import org.codehaus.plexus.compiler.util.scan.mapping.SuffixMapping;
 import org.codehaus.plexus.util.FileUtils;
+import org.exolab.castor.builder.SourceGenerator;
 
 /**
  * A mojo that uses Castor to generate a collection of javabeans from an XSD.  Detailed
@@ -73,7 +74,7 @@ public class GenerateMojo
      * 
      * @parameter expression="${basedir}/src/main/castor"
      */
-    private String schemaDirectory;
+    private File schemaDirectory;
 
     /**
      * The directory to output the generated sources to
@@ -81,7 +82,7 @@ public class GenerateMojo
      * @parameter expression="${project.build.directory}/generated-sources/castor"
      * @todo This would be better as outputDirectory but for backward compatibility I left it as dest
      */
-    private String dest;
+    private File dest;
 
     /**
      * The directory to store the processed xsds.  The timestamps of these xsds
@@ -90,7 +91,7 @@ public class GenerateMojo
      * @parameter expression="${project.build.directory}/xsds"
      * @todo timestampDirectory would be a better name for this. Used this name for backward compatibility
      */
-    private String tstamp;
+    private File tstamp;
 
     /**
      * The granularity in milliseconds of the last modification
@@ -161,15 +162,25 @@ public class GenerateMojo
      */
     private MavenProject project;
 
+    /**
+     * {@link SourceGenerator} instance used for code generation.
+     * 
+     * @see SourceGenerator#generateSource(org.xml.sax.InputSource, String)
+     */
     private CastorSourceGenerator sgen;
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.plugin.AbstractMojo#execute()
+     */
     public void execute()
         throws MojoExecutionException
     {
 
-        if ( !FileUtils.fileExists( dest ) )
+        if ( !dest.exists() )
         {
-            FileUtils.mkdir( dest );
+            FileUtils.mkdir( dest.getAbsolutePath() );
         }
 
         Set staleXSDs = computeStaleXSDs();
@@ -177,7 +188,7 @@ public class GenerateMojo
         if ( staleXSDs.isEmpty() )
         {
             getLog().info( "Nothing to process - all xsds are up to date" );
-            project.addCompileSourceRoot( dest );
+            project.addCompileSourceRoot( dest.getAbsolutePath() );
             return;
         }
 
@@ -207,7 +218,7 @@ public class GenerateMojo
 
         if ( project != null )
         {
-            project.addCompileSourceRoot( dest );
+            project.addCompileSourceRoot( dest.getAbsolutePath() );
         }
     }
 
@@ -235,7 +246,7 @@ public class GenerateMojo
 
             File tstampDir = getTimeStampDirectory();
 
-            File schemaDir = new File( schemaDirectory );
+            File schemaDir = schemaDirectory;
 
             SourceInclusionScanner scanner = getSourceInclusionScanner();
 
@@ -264,7 +275,7 @@ public class GenerateMojo
 
     private File getTimeStampDirectory()
     {
-        return new File( tstamp );
+        return tstamp;
     }
 
     private void config()
@@ -276,7 +287,7 @@ public class GenerateMojo
 
         sgen.setLineSeparatorStyle( lineSeparator );
 
-        sgen.setDestDir( dest );
+        sgen.setDestDir( dest.getAbsolutePath() );
 
         if (bindingfile != null && bindingfile.exists()) {
             sgen.setBindingFile( bindingfile );
@@ -349,22 +360,22 @@ public class GenerateMojo
         getLog().info( msg );
     }
 
-    public String getDest()
+    public File getDest()
     {
         return dest;
     }
 
-    public void setDest( String dest )
+    public void setDest( final File dest )
     {
         this.dest = dest;
     }
 
-    public String getTstamp()
+    public File getTstamp()
     {
         return tstamp;
     }
 
-    public void setTstamp( String tstamp )
+    public void setTstamp( final File tstamp )
     {
         this.tstamp = tstamp;
     }
@@ -374,7 +385,7 @@ public class GenerateMojo
         return packaging;
     }
 
-    public void setPackaging( String packaging )
+    public void setPackaging( final String packaging )
     {
         this.packaging = packaging;
     }

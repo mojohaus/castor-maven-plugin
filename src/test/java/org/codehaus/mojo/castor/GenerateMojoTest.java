@@ -53,8 +53,8 @@ public class GenerateMojoTest
 
         generateMojo = new GenerateMojo();
         generateMojo.setProject( new MavenProject( new Model() ) );
-        generateMojo.setDest( GENERATED_DIR );
-        generateMojo.setTstamp( TIMESTAMP_DIR );
+        generateMojo.setDest( new File ( GENERATED_DIR ));
+        generateMojo.setTstamp( new File ( TIMESTAMP_DIR ) );
     }
 
     public void tearDown()
@@ -232,14 +232,14 @@ public class GenerateMojoTest
 
     public void testDestProperty()
     {
-        generateMojo.setDest( "testString" );
-        assertEquals( "testString", generateMojo.getDest() );
+        generateMojo.setDest( new File ( "testString" ) );
+        assertEquals( "testString", generateMojo.getDest().toString() );
     }
 
     public void testTStampProperty()
     {
-        generateMojo.setTstamp( "testString" );
-        assertEquals( "testString", generateMojo.getTstamp() );
+        generateMojo.setTstamp( new File ( "testString" ) );
+        assertEquals( "testString", generateMojo.getTstamp().toString() );
     }
 
     public void testSchemaProperty()
