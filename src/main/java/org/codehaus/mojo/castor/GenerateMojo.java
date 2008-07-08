@@ -181,6 +181,7 @@ public class GenerateMojo
         if ( !dest.exists() )
         {
             FileUtils.mkdir( dest.getAbsolutePath() );
+            project.addCompileSourceRoot( dest.getAbsolutePath() );
         }
 
         Set staleXSDs = computeStaleXSDs();
