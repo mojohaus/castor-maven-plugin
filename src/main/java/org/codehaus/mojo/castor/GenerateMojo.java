@@ -19,6 +19,8 @@ package org.codehaus.mojo.castor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -151,7 +153,7 @@ public class GenerateMojo
     private String packaging;
     
     /**
-     * Whether to generate Java classes fro imported XML schemas or not.
+     * Whether to generate Java classes from imported XML schemas or not.
      * @parameter default-value="false"
      */
     private boolean generateImportedSchemas = false;
@@ -170,6 +172,12 @@ public class GenerateMojo
     private CastorSourceGenerator sgen;
 
     /**
+     * Whether to generate JDO-specific descriptor classes or not.
+     * @parameter default-value="false"
+     */
+    private Object createJdoDescriptors;
+
+    /**
      * {@inheritDoc}
      * 
      * @see org.apache.maven.plugin.AbstractMojo#execute()
@@ -181,7 +189,6 @@ public class GenerateMojo
         if ( !dest.exists() )
         {
             FileUtils.mkdir( dest.getAbsolutePath() );
-            project.addCompileSourceRoot( dest.getAbsolutePath() );
         }
 
         Set staleXSDs = computeStaleXSDs();
@@ -203,9 +210,12 @@ public class GenerateMojo
             {
 
                 processFile( xsd.getCanonicalPath() );
-                // make sure this is after the acutal processing, 
+
+                // copy stale xsd to timestamp directory within the same relative path 
+                File timeStampDir = getTimeStampDirectory(); 
+                // make sure this is after the actual processing, 
                 //otherwise it if fails the computeStaleXSDs will think it completed.
-                FileUtils.copyFileToDirectory( xsd, getTimeStampDirectory() );
+                FileUtils.copyFileToDirectory( xsd, timeStampDir );
             }
             catch ( Exception e )
             {
@@ -327,6 +337,36 @@ public class GenerateMojo
         }
         
         sgen.setGenerateImportedSchemas( generateImportedSchemas );
+
+        callSetterMethodUsingReflection( "setJdoDescriptorCreation", boolean.class, 
+                createJdoDescriptors );
+        
+    }
+
+    /**
+     * Helper method to invoke a setter method on SourceGenerator that might not 
+     * be available due to a version issue.
+     * 
+     * @param methodName Name of the method
+     * @param parameterType Type of the method parameter.
+     * @param parameterValue Actual parameter value to be used during method invocation.
+     * @throws MojoExecutionException If the method cannot be invoked.
+     */
+    private void callSetterMethodUsingReflection( final String methodName, final Class parameterType,
+            final Object parameterValue )
+            throws MojoExecutionException {
+        try {
+            Method method = sgen.getClass().getMethod( methodName, new Class[] { parameterType } );
+            method.invoke( sgen, new Object[] { parameterValue } );
+        } catch (NoSuchMethodException e) {
+            // unable to find method to configure JDO descriptor creation.
+        } catch (IllegalArgumentException e) {
+            throw new MojoExecutionException( "Problem calling SourceGenerator.setJdoDescriptorCreation: ", e ); 
+        } catch (IllegalAccessException e) {
+            throw new MojoExecutionException( "Problem calling SourceGenerator.setJdoDescriptorCreation: ", e ); 
+        } catch (InvocationTargetException e) {
+            throw new MojoExecutionException( "Problem calling SourceGenerator.setJdoDescriptorCreation: ", e ); 
+        }
     }
 
     /**
