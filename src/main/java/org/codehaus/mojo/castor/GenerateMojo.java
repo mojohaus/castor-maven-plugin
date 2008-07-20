@@ -175,7 +175,7 @@ public class GenerateMojo
      * Whether to generate JDO-specific descriptor classes or not.
      * @parameter default-value="false"
      */
-    private Object createJdoDescriptors;
+    private boolean createJdoDescriptors = false;
 
     /**
      * {@inheritDoc}
@@ -336,10 +336,11 @@ public class GenerateMojo
             }
         }
         
-        sgen.setGenerateImportedSchemas( generateImportedSchemas );
-
-        callSetterMethodUsingReflection( "setJdoDescriptorCreation", boolean.class, 
-                createJdoDescriptors );
+        if ( createJdoDescriptors == true ) 
+        {
+            callSetterMethodUsingReflection( "setJdoDescriptorCreation",
+                    boolean.class, new Boolean(createJdoDescriptors) );
+        }
         
     }
 
@@ -464,16 +465,18 @@ public class GenerateMojo
         return marshal;
     }
 
-    public void setMarshal( boolean marshal )
+    public void setMarshal( final boolean marshal )
     {
         this.marshal = marshal;
     }
     
-    public boolean isGenerateImportedSchemas() {
+    public boolean isGenerateImportedSchemas() 
+    {
         return generateImportedSchemas;
     }
 
-    public void setGenerateImportedSchemas(boolean generateImportedSchemas) {
+    public void setGenerateImportedSchemas( final boolean generateImportedSchemas ) 
+    {
         this.generateImportedSchemas = generateImportedSchemas;
     }
 
@@ -485,6 +488,16 @@ public class GenerateMojo
     public void setProject( MavenProject project )
     {
         this.project = project;
+    }
+
+    public final boolean getCreateJdoDescriptors() 
+    {
+        return createJdoDescriptors;
+    }
+
+    public final void setCreateJdoDescriptors( boolean newCreateJdoDescriptors ) 
+    {
+        this.createJdoDescriptors = newCreateJdoDescriptors;
     }
 
 }
