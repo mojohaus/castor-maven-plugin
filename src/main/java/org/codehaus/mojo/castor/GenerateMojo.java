@@ -342,6 +342,11 @@ public class GenerateMojo
                     boolean.class, new Boolean(createJdoDescriptors) );
         }
         
+        if ( isGenerateImportedSchemas() == true )
+        {
+            sgen.setGenerateImportedSchemas( true );
+        }
+        
     }
 
     /**
