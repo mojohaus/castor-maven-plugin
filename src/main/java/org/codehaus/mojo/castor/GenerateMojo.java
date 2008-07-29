@@ -332,7 +332,8 @@ public class GenerateMojo
                         properties.getAbsolutePath() );
             } else if ( properties != null) {
                 getLog().info( "There is no custom builder property file at " +
-                		"the default location at " + properties.getAbsolutePath() );
+                		"the default location at " + properties.getAbsolutePath() +
+                		". Continuing code generation without." );
             }
         }
         
