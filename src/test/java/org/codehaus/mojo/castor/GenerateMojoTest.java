@@ -139,6 +139,22 @@ public class GenerateMojoTest
         assertTrue(new File(GENERATED_DIR, "MainType.java").exists());
     }
 
+    public void testGenerateWithMappings()
+    throws MojoExecutionException
+    {
+
+        generateMojo.setSchema( new File ( getPathTo("src/test/resources/main.xsd") ) );
+        generateMojo.setProperties( new File ( getPathTo("src/test/resources/castorbuilder.properties") ) );
+        generateMojo.setTypes( "arraylist" );
+        generateMojo.setGenerateMappings( true );
+        generateMojo.execute();
+
+        assertTrue( new File ( GENERATED_DIR, "Main.java" ).exists());
+        assertTrue( new File ( "target/test-classes", "mapping.xml" ).exists());
+        
+        FileUtils.deleteQuietly( new File( "target/test-classes", "mapping.xml" ) );
+    }
+
     private File getTimeStampFile()
     {
         return new File( TIMESTAMP_DIR, "mapping.xml" );
