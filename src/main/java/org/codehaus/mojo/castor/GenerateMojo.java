@@ -246,6 +246,9 @@ public class GenerateMojo
         if ( project != null )
         {
             project.addCompileSourceRoot( dest.getAbsolutePath() );
+            
+            // TODO: add .castor.cdr files automatically
+//            project.addTestResource( testResource );
         }
     }
 
