@@ -1,5 +1,3 @@
-package org.codehaus.mojo.castor;
-
 /*
  * Copyright 2005 The Codehaus.
  *
@@ -15,6 +13,8 @@ package org.codehaus.mojo.castor;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.codehaus.mojo.castor;
+
 import java.util.Iterator;
 import java.util.Map;
 
