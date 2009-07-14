@@ -18,9 +18,11 @@
   <issueManagement>
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MCASTOR</url>
+    
   </issueManagement>
   
   <inceptionYear>2005</inceptionYear>
+  
   <description>
     The Castor plugin is a Maven plugin that provides the functionality of
     Castor's SourceGenerator for generating Java beans and associated Marshallers
@@ -34,6 +36,12 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  
+  <scm> 
+    <connection>scm:svn:http://svn.mojo.codehaus.org/trunk/mojo/castor-maven-plugin</connection> 
+    <developerConnection>scm:svn:https://svn.mojo.codehaus.org/trunk/mojo/castor-maven-plugin</developerConnection>
+    <url>http://svn.mojo.codehaus.org/browse/mojo/trunk/mojo/castor-maven-plugin</url>
+  </scm>  
   
   <developers>
     <developer>
