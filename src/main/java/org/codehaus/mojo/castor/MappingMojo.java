@@ -27,12 +27,14 @@ public class MappingMojo
     extends AbstractMappingMojo
 {
     /**
+     * The name of the Java class from which a mapping file should be generated.
      * @parameter
      * @required
      */
     private String className;
 
     /**
+     * Name of the mapping file to be generated.
      * @parameter
      * @required
      */

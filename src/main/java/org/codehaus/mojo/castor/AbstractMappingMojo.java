@@ -43,12 +43,14 @@ public abstract class AbstractMappingMojo
     extends AbstractMojo
 {
     /**
+     * The Maven project to act upon.
      * @parameter expression="${project}"
      * @required
      */
     private MavenProject project;
 
     /**
+     * Whether to force generation of mapping file where one already exists.
      * @parameter default-value="false"
      */
     private boolean force;

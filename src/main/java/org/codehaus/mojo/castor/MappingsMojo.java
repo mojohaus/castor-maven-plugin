@@ -33,6 +33,7 @@ public class MappingsMojo
     extends AbstractMappingMojo
 {
     /**
+     * A set of Java classes for which a mapping file should be generated.
      * @parameter
      * @required
      */

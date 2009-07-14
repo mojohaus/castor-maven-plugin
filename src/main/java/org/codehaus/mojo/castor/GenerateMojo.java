@@ -174,6 +174,7 @@ public class GenerateMojo
     private boolean generateMappings = false;
 
     /**
+     * The Maven project to act upon.
      * @parameter expression="${project}"
      * @required
      */
