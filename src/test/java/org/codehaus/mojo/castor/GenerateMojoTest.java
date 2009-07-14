@@ -31,7 +31,7 @@ public class GenerateMojoTest
 
     private static final String TIMESTAMP_DIR = getBasedir() + "/target/test/resources/timestamp";
 
-    private static final String GENERATED_DIR = getBasedir() + "/target/test/generated";
+    private static final String GENERATED_DIR = getBasedir() + "/target/generated-sources/castor";
 
     private static final String MAPPING_XSD = getBasedir() + "/src/test/resources/mapping.xml";
 
