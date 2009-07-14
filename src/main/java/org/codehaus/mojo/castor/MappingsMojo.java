@@ -22,13 +22,12 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * A mojo that uses Castor MappingTool to generate mapping files from a set of Classes.
- * <a href="http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html">
- * MappingTool</a>.
+ * A mojo that uses Castor MappingTool to generate mapping files from a set of Classes. <a
+ * href="http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html"> MappingTool</a>.
  * 
  * @goal mappings
  * @phase process-classes
- * @author nicolas <nicolas@apache.org> 
+ * @author nicolas <nicolas@apache.org>
  */
 public class MappingsMojo
     extends AbstractMappingMojo
@@ -39,8 +38,14 @@ public class MappingsMojo
      */
     private Map classes;
 
+    /**
+     * A Java class name. 
+     */
     private String className;
 
+    /**
+     * Name of the mapping file to be generated.
+     */
     private String mappingName;
 
     /**
@@ -66,6 +71,7 @@ public class MappingsMojo
     }
 
     /**
+     * Returns the class name.
      * @return the classname
      */
     protected String getClassName()
@@ -74,6 +80,7 @@ public class MappingsMojo
     }
 
     /**
+     * Returns the mapping file name.
      * @return the mappingName
      */
     protected String getMappingName()

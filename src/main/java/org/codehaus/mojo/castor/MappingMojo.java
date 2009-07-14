@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.codehaus.mojo.castor;
 
 /**
- * A mojo that uses Castor MappingTool to generate mapping files from a single Class.
- * <a href="http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html">
- * MappingTool</a>.
- * 
+ * A mojo that uses Castor MappingTool to generate mapping files from a single Class. <a
+ * href="http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html"> MappingTool</a>.
  * 
  * @goal mapping
  * @phase process-classes
@@ -41,11 +38,21 @@ public class MappingMojo
      */
     private String mappingName;
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.codehaus.mojo.castor.AbstractMappingMojo#getClassName()
+     */
     protected String getClassName()
     {
         return className;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.codehaus.mojo.castor.AbstractMappingMojo#getMappingName()
+     */
     protected String getMappingName()
     {
         return mappingName;

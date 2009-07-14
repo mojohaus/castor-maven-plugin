@@ -1,5 +1,3 @@
-package org.codehaus.mojo.castor;
-
 /*
  * Copyright 2005 The Codehaus.
  *
@@ -15,6 +13,7 @@ package org.codehaus.mojo.castor;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.codehaus.mojo.castor;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,11 +32,10 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.exolab.castor.tools.MappingTool;
- 
+
 /**
- * A mojo that uses Castor MappingTool to generate mapping files from a Class.
- * <a href="http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html">
- * MappingTool</a>.
+ * A mojo that uses Castor MappingTool to generate mapping files from a Class. <a
+ * href="http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html"> MappingTool</a>.
  * 
  * @author nicolas <nicolas@apache.org>
  */
@@ -61,8 +59,13 @@ public abstract class AbstractMappingMojo
      * @parameter default-value="${project.build.outputDirectory}/"
      */
     private File outputDirectory;
-	
-	/**
+
+    /**
+     * Private (project) class loader.
+     */
+    private ClassLoader projectClassLoader;
+
+    /**
      * {@inheritDoc}
      * 
      * @see org.apache.maven.plugin.Mojo#execute()
@@ -82,16 +85,20 @@ public abstract class AbstractMappingMojo
             // As of Castor 1.2, an InternalContext needs to be set; using reflection
             // to set it or not
             Class internalContextClass;
-            try {
+            try
+            {
                 internalContextClass = Class.forName( "org.castor.xml.InternalContext" );
-                Class backwardsCompatibilityClass = 
-                    Class.forName( "org.castor.xml.BackwardCompatibilityContext" );
-                Method setter = MappingTool.class.getMethod( "setInternalContext", new Class[] { internalContextClass } );
-                if ( setter != null ) {
+                Class backwardsCompatibilityClass = Class.forName( "org.castor.xml.BackwardCompatibilityContext" );
+                Method setter =
+                    MappingTool.class.getMethod( "setInternalContext", new Class[] { internalContextClass } );
+                if ( setter != null )
+                {
                     getLog().info( "About to invoke 'setInternalContext()' on org.exolab.castor.tools.MappingTool" );
                     setter.invoke( tool, new Object[] { backwardsCompatibilityClass.newInstance() } );
                 }
-            } catch ( ClassNotFoundException e ) {
+            }
+            catch ( ClassNotFoundException e )
+            {
                 // nothing to do as we check whether the class(es) exist or not
             }
 
@@ -110,13 +117,16 @@ public abstract class AbstractMappingMojo
         }
         catch ( Exception e )
         {
-            throw new MojoExecutionException( "Failed to generate mapping for "
-                + getClassName(), e );
+            throw new MojoExecutionException( "Failed to generate mapping for " + getClassName(), e );
         }
     }
 
-    private ClassLoader projectClassLoader;
-
+    /**
+     * Returns the private project {@link ClassLoader}.
+     * @return A project-specific {@link ClassLoader}.
+     * @throws DependencyResolutionRequiredException If a dependecy cannot be resolved.
+     * @throws MalformedURLException If an URL is malformed.
+     */
     protected ClassLoader getProjectClassLoader()
         throws DependencyResolutionRequiredException, MalformedURLException
     {
@@ -141,17 +151,18 @@ public abstract class AbstractMappingMojo
             }
             i++;
         }
-        projectClassLoader =
-            new URLClassLoader( urls, getClass().getClassLoader().getSystemClassLoader() );
+        projectClassLoader = new URLClassLoader( urls, getClass().getClassLoader().getSystemClassLoader() );
         return projectClassLoader;
     }
 
-	/**
+    /**
+     * Returns the class name.
      * @return the classname
      */
     protected abstract String getClassName();
 
     /**
+     * Returns the name of the mapping file.
      * @return the mappingName
      */
     protected abstract String getMappingName();

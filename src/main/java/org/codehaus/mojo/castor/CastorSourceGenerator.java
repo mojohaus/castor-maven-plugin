@@ -1,3 +1,18 @@
+/*
+ * Copyright 2005 The Codehaus.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.codehaus.mojo.castor;
 
 import java.io.File;
@@ -14,8 +29,8 @@ import org.exolab.castor.builder.factory.FieldInfoFactory;
 import org.exolab.castor.builder.info.CollectionInfo;
 
 /**
- * Override Castor's SourceGenerator to inject exception handling.
- * Code based on Castor XML code generator, release 1.1-M2
+ * Override Castor's SourceGenerator to inject exception handling. Code based on Castor XML code generator, release
+ * 1.1-M2
  */
 class CastorSourceGenerator
     extends SourceGenerator
@@ -26,18 +41,14 @@ class CastorSourceGenerator
     private Log log;
 
     /**
-     * {@link FieldInfoFactory} instance to be used during code generation.
-     * 
-     * We need to save this in order to override its properties later
-     * since SourceGenerator doesn't give us access to this and 
-     * the properties are only read during the constructor call
+     * {@link FieldInfoFactory} instance to be used during code generation. We need to save this in order to override
+     * its properties later since SourceGenerator doesn't give us access to this and the properties are only read during
+     * the constructor call
      */
     private FieldInfoFactory fieldInfoFactory;
 
     /**
-     * Indicates whether logging should be verbose.
-     * 
-     * As base class does not provide access to this variable, we intercept
+     * Indicates whether logging should be verbose. As base class does not provide access to this variable, we intercept
      * setting it and store its value here
      */
     private boolean verbose;
@@ -51,8 +62,8 @@ class CastorSourceGenerator
     }
 
     /**
-     * Creates an instance of {@link CastorSourceGenerator}, configured with a field info 
-     * factory.
+     * Creates an instance of {@link CastorSourceGenerator}, configured with a field info factory.
+     * 
      * @param fieldInfoFactory {@link FieldInfoFactory} instance to be used during code generation.
      */
     public CastorSourceGenerator( FieldInfoFactory fieldInfoFactory )
@@ -62,8 +73,8 @@ class CastorSourceGenerator
     }
 
     /**
-     * Creates an instance of {@link CastorSourceGenerator}, configured with a field info 
-     * factory and a binding file.
+     * Creates an instance of {@link CastorSourceGenerator}, configured with a field info factory and a binding file.
+     * 
      * @param fieldInfoFactory {@link FieldInfoFactory} instance to be used during code generation.
      * @param extendedBinding Binding file to be used during code generation.
      */
@@ -74,8 +85,8 @@ class CastorSourceGenerator
     }
 
     /**
-     * Factory method to create a {@link CastorSourceGenerator} instance, preset with
-     * default values.
+     * Factory method to create a {@link CastorSourceGenerator} instance, preset with default values.
+     * 
      * @param types A {@link FieldInfoFactory} type.
      * @return a {@link CastorSourceGenerator} instance
      * @throws MojoExecutionException To signal that an invalid type has been passed.
@@ -114,6 +125,7 @@ class CastorSourceGenerator
 
     /**
      * Sets the {@link Log} instance to use for logging.
+     * 
      * @param log The {@link Log} instance to use for logging
      */
     public void setLog( Log log )
@@ -123,6 +135,7 @@ class CastorSourceGenerator
 
     /**
      * Returns the {@link Log} instance to use for logging.
+     * 
      * @return The {@link Log} instance to use for logging.
      */
     public Log getLog()
@@ -132,6 +145,7 @@ class CastorSourceGenerator
 
     /**
      * Helper method to output log statements.
+     * 
      * @param msg The log message to be output.
      */
     public void log( String msg )
@@ -141,6 +155,7 @@ class CastorSourceGenerator
 
     /**
      * Helper method to (conditionally) output a log statement.
+     * 
      * @param msg The log message to be output.
      */
     public void verbose( String msg )
@@ -153,6 +168,7 @@ class CastorSourceGenerator
 
     /**
      * Sets a user-specified line separator stype on the {@link CastorSourceGenerator}.
+     * 
      * @param lineSeparator A user-specified line separator style.
      * @throws MojoExecutionException If an invalid line separator stype has been specified.
      */
@@ -187,9 +203,12 @@ class CastorSourceGenerator
     }
 
     /**
+     * Indicates whether source generation should be 'verbose'.
+     * @param verbose True if source generation should be 'verbose'.
+     * 
      * @see org.exolab.castor.builder.SourceGenerator#setVerbose(boolean)
      */
-    public void setVerbose( boolean verbose )
+    public void setVerbose( final boolean verbose )
     {
         this.verbose = verbose;
         super.setVerbose( verbose );
@@ -197,6 +216,7 @@ class CastorSourceGenerator
 
     /**
      * Sets a user-specific binding file to be used during code generation.
+     * 
      * @param bindingFile A user-specified binding file.
      */
     public void setBindingFile( final File bindingFile )
@@ -206,6 +226,7 @@ class CastorSourceGenerator
 
     /**
      * Sets user-specific code generator properties for the code generation process.
+     * 
      * @param properties User-specific code generator properties.
      * @throws MojoExecutionException Indicates that the user-specific properties cannot be accessed.
      */
@@ -231,7 +252,7 @@ class CastorSourceGenerator
             }
             setDefaultProperties( customProperties );
 
-            // these properties are read at contstruction time and copied into FieldInfoFactory 
+            // these properties are read at contstruction time and copied into FieldInfoFactory
             // se we set them directly in the fieldInfoFactory here.
             if ( generateExtraCollectionMethods() )
             {
@@ -240,10 +261,10 @@ class CastorSourceGenerator
             }
 
             String suffix = getProperty( CollectionInfo.REFERENCE_SUFFIX_PROPERTY, null );
-            if ( suffix != null ) 
+            if ( suffix != null )
             {
-                verbose( "Overriding default castorbuilder.properties and "
-                        + "setting referenceSuffixProperty to " + suffix );
+                verbose( "Overriding default castorbuilder.properties and " + "setting referenceSuffixProperty to "
+                    + suffix );
             }
             fieldInfoFactory.setReferenceMethodSuffix( suffix );
 
