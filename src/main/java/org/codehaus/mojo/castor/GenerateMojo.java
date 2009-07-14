@@ -253,6 +253,13 @@ public class GenerateMojo
         }
     }
 
+    /**
+     * Computes the collection of <i>stale</i> XML schemas for which 
+     * sources need to be re-generated.
+     * @return A set of XML schemas for which sources need to be re-generated.
+     * @throws MojoExecutionException If there's a problem with scanning all potential
+     *    XML schemas. 
+     */
     private Set computeStaleXSDs()
         throws MojoExecutionException
     {
@@ -301,16 +308,30 @@ public class GenerateMojo
         return staleSources;
     }
 
+    /**
+     * Returns a {@link SourceInclusionScanner} instance.
+     * @return A {@link SourceInclusionScanner} instance.
+     */
     private SourceInclusionScanner getSourceInclusionScanner()
     {
         return new StaleSourceScanner( staleMillis );
     }
 
+    /**
+     * Returns the location where timestamp information is recorded.
+     * @return the location where timestamp information is recorded.
+     */
     private File getTimeStampDirectory()
     {
         return tstamp;
     }
 
+    /**
+     * Entry point for configuring the underlying Castor XML code generator
+     * based upon the plugin configuration.
+     * @throws MojoExecutionException If there's a problem accessing resources as specified 
+     * in the plugin configuration.
+     */
     private void config()
         throws MojoExecutionException
     {
@@ -419,7 +440,8 @@ public class GenerateMojo
     }
 
     /**
-     * Run source generation
+     * Run source generation on the {@link File} soecified.
+     * @path filePath The XML schema file (path) to be processed.
      */
     private void processFile( String filePath )
         throws MojoExecutionException
@@ -445,116 +467,208 @@ public class GenerateMojo
         }
     }
 
-    private void log( String msg )
+    /**
+     * Logs a message to the logger.
+     * @param msg The message ot be logged.
+     */
+    private void log( final String msg )
     {
         getLog().info( msg );
     }
 
+    /**
+     * Returns the destination directory to used during code generation.
+     * @return the destination directory to used during code generation.
+     */
     public File getDest()
     {
         return dest;
     }
 
+    /**
+     * Sets the destination directory to used during code generation.
+     * @param dest the destination directory to used during code generation.
+     */
     public void setDest( final File dest )
     {
         this.dest = dest;
     }
 
+    /**
+     * Returns the directory to store time stamp information.
+     * @return the directory to store time stamp information.
+     */
     public File getTstamp()
     {
         return tstamp;
     }
 
+    /**
+     * Sets the directory to store time stamp information.
+     * @param tstamp the directory to store time stamp information.
+     */
     public void setTstamp( final File tstamp )
     {
         this.tstamp = tstamp;
     }
 
+    /**
+     * Returns the default package to be used during code generation.
+     * @return the default package to be used during code generation.
+     */
     public String getPackaging()
     {
         return packaging;
     }
 
+    /**
+     * Sets the default package to be used during code generation.
+     * @param packaging the default package to be used during code generation.
+     */
     public void setPackaging( final String packaging )
     {
         this.packaging = packaging;
     }
 
+    /**
+     * Returns the (single) XML schema file to be processed.
+     * @return the (single) XML schema file to be processed.
+     */
     public File getSchema()
     {
         return schema;
     }
 
-    public void setSchema( File schema )
+    /**
+     * Sets the (single) XML schema file to be processed.
+     * @param schema the (single) XML schema file to be processed.
+     */
+    public void setSchema( final File schema )
     {
         this.schema = schema;
     }
 
+    /**
+     * Returns the collection types Castor XML is capable of working with.
+     * @return the collection types Castor XML is capable of working with.
+     */
     public String getTypes()
     {
         return types;
     }
 
-    public void setTypes( String types )
+    /**
+     * Sets the collection types Castor XML is capable of working with.
+     * @param types the collection types Castor XML is capable of working with.
+     */
+    public void setTypes( final String types )
     {
         this.types = types;
     }
 
+    /**
+     * Sets the Castor XML code generator binding file to be used during code generation.
+     * @param bindingfile the Castor XML code generator binding file to be used during code generation.
+     */
     public void setBindingfile( final File bindingfile )
     {
         this.bindingfile = bindingfile;
     }
 
+    /**
+     * Sets the (user-specific) <tt>castorbuilder.properties</tt> file to be used during code generation.
+     * @param properties the (user-specific) <tt>castorbuilder.properties</tt> file to be used during code generation.
+     */
     public void setProperties( final File properties )
     {
         this.properties = properties;
     }
 
+    /**
+     * Indicates whether #marshal() methods will be generated during the code generation.
+     * @return True if #marshal() methods will be generated during the code generation.
+     */
     public boolean getMarshal()
     {
         return marshal;
     }
 
+    /**
+     * Sets whether #marshal() methods will be generated during the code generation.
+     * @param marshal True if #marshal() methods will be generated during the code generation.
+     */
     public void setMarshal( final boolean marshal )
     {
         this.marshal = marshal;
     }
 
+    /**
+     * Indicates whether code should be generated for imported XML schemas as well. 
+     * @return True if code should be generated for imported XML schemas as well.
+     */
     public boolean isGenerateImportedSchemas()
     {
         return generateImportedSchemas;
     }
 
+    /**
+     * Sets whether code should be generated for imported XML schemas as well.
+     * @param generateImportedSchemas True if code should be generated for imported XML schemas as well.
+     */
     public void setGenerateImportedSchemas( final boolean generateImportedSchemas )
     {
         this.generateImportedSchemas = generateImportedSchemas;
     }
 
+    /**
+     * Returns the {@link MavenProject} instance for which code generation should be executed.
+     * @return the {@link MavenProject} instance for which code generation should be executed.
+     */
     public MavenProject getProject()
     {
         return project;
     }
 
+    /**
+     * Sets the {@link MavenProject} instance for which code generation should be executed.
+     * @param project the {@link MavenProject} instance for which code generation should be executed.
+     */
     public void setProject( MavenProject project )
     {
         this.project = project;
     }
 
+    /**
+     * Indicates whether JDO descriptors should be generated during code generation.
+     * @return True if JDO descriptors should be generated during code generation.
+     */
     public final boolean getCreateJdoDescriptors()
     {
         return createJdoDescriptors;
     }
 
-    public final void setCreateJdoDescriptors( boolean newCreateJdoDescriptors )
+    /**
+     * Sets whether JDO descriptors should be generated during code generation.
+     * @param newCreateJdoDescriptors True if JDO descriptors should be generated during code generation.
+     */
+    public final void setCreateJdoDescriptors( final boolean newCreateJdoDescriptors )
     {
         this.createJdoDescriptors = newCreateJdoDescriptors;
     }
 
+    /**
+     * Indicates whether mapping files should be created during code generation.
+     * @return True if mapping files should be created during code generation
+     */
     private boolean generateMapping()
     {
         return this.generateMappings;
     }
 
+    /**
+     * Sets whether mapping files should be created during code generation.
+     * @param generateMappings True if mapping files should be created during code generation.
+     */
     public final void setGenerateMappings( final boolean generateMappings )
     {
         this.generateMappings = generateMappings;
