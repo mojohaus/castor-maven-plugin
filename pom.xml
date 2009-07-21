@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <parent>
       <artifactId>mojo-parent</artifactId>
       <groupId>org.codehaus.mojo</groupId>
@@ -9,7 +8,7 @@
    <artifactId>castor-maven-plugin</artifactId>
    <packaging>maven-plugin</packaging>
    <name>Castor Maven Plugin</name>
-   <version>1.5-SNAPSHOT</version>
+   <version>1.5</version>
    <prerequisites>
       <maven>2.0</maven>
    </prerequisites>
@@ -31,9 +30,9 @@
       </license>
    </licenses>
    <scm>
-      <connection>scm:svn:http://svn.mojo.codehaus.org/trunk/mojo/castor-maven-plugin</connection>
-      <developerConnection>scm:svn:https://svn.mojo.codehaus.org/trunk/mojo/castor-maven-plugin</developerConnection>
-      <url>http://svn.mojo.codehaus.org/browse/mojo/trunk/mojo/castor-maven-plugin</url>
+      <connection>scm:svn:http://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</connection>
+      <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</developerConnection>
+      <url>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</url>
    </scm>
    <developers>
       <developer>
