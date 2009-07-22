@@ -8,7 +8,7 @@
    <artifactId>castor-maven-plugin</artifactId>
    <packaging>maven-plugin</packaging>
    <name>Castor Maven Plugin</name>
-   <version>1.5</version>
+   <version>2.0-SNAPSHOT</version>
    <prerequisites>
       <maven>2.0</maven>
    </prerequisites>
@@ -29,11 +29,13 @@
          <distribution>repo</distribution>
       </license>
    </licenses>
+   <!-- 
    <scm>
       <connection>scm:svn:http://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</connection>
       <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</developerConnection>
       <url>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</url>
    </scm>
+    -->
    <developers>
       <developer>
          <id>jtolentino</id>
