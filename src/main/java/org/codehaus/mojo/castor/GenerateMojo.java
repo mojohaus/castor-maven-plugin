@@ -208,7 +208,7 @@ public class GenerateMojo
             FileUtils.mkdir( dest.getAbsolutePath() );
         }
 
-        Set staleXSDs = computeStaleXSDs();
+        Set<File> staleXSDs = computeStaleXSDs();
 
         if ( staleXSDs.isEmpty() )
         {
@@ -219,7 +219,7 @@ public class GenerateMojo
 
         config();
 
-        for ( Iterator i = staleXSDs.iterator(); i.hasNext(); )
+        for ( Iterator<File> i = staleXSDs.iterator(); i.hasNext(); )
         {
             File xsd = (File) i.next();
 
@@ -260,10 +260,10 @@ public class GenerateMojo
      * @throws MojoExecutionException If there's a problem with scanning all potential
      *    XML schemas. 
      */
-    private Set computeStaleXSDs()
+    private Set<File> computeStaleXSDs()
         throws MojoExecutionException
     {
-        Set staleSources = new HashSet();
+        Set<File> staleSources = new HashSet<File>();
 
         if ( schema != null && schema.exists() )
         {
@@ -412,7 +412,7 @@ public class GenerateMojo
      * @param parameterValue Actual parameter value to be used during method invocation.
      * @throws MojoExecutionException If the method cannot be invoked.
      */
-    private void callSetterMethodUsingReflection( final String methodName, final Class parameterType,
+    private void callSetterMethodUsingReflection( final String methodName, final Class<?> parameterType,
                                                   final Object parameterValue )
         throws MojoExecutionException
     {

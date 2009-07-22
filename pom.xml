@@ -12,6 +12,9 @@
    <prerequisites>
       <maven>2.0</maven>
    </prerequisites>
+   <properties>
+      <jdkLevel>1.5</jdkLevel> 
+   </properties>   
    <issueManagement>
       <system>jira</system>
       <url>http://jira.codehaus.org/browse/MCASTOR</url>
@@ -36,6 +39,28 @@
       <url>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</url>
    </scm>
     -->
+    
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId> 
+            <artifactId>maven-compiler-plugin</artifactId> 
+            <configuration> 
+                <source>1.5</source>
+                <target>1.5</target>
+            </configuration>         
+         </plugin>
+         <plugin> 
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>2.3</version>
+            <configuration> 
+               <targetJdk>1.5</targetJdk>
+            </configuration> 
+         </plugin>      
+      </plugins>
+   </build>
+   
    <developers>
       <developer>
          <id>jtolentino</id>

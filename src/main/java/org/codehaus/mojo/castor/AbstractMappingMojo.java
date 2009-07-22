@@ -86,11 +86,11 @@ public abstract class AbstractMappingMojo
 
             // As of Castor 1.2, an InternalContext needs to be set; using reflection
             // to set it or not
-            Class internalContextClass;
+            Class<?> internalContextClass;
             try
             {
                 internalContextClass = Class.forName( "org.castor.xml.InternalContext" );
-                Class backwardsCompatibilityClass = Class.forName( "org.castor.xml.BackwardCompatibilityContext" );
+                Class<?> backwardsCompatibilityClass = Class.forName( "org.castor.xml.BackwardCompatibilityContext" );
                 Method setter =
                     MappingTool.class.getMethod( "setInternalContext", new Class[] { internalContextClass } );
                 if ( setter != null )
@@ -104,7 +104,7 @@ public abstract class AbstractMappingMojo
                 // nothing to do as we check whether the class(es) exist or not
             }
 
-            Class clazz = cl.loadClass( getClassName() );
+            Class<?> clazz = cl.loadClass( getClassName() );
             tool.addClass( clazz );
 
             File file = new File( outputDirectory, getMappingName().trim() );

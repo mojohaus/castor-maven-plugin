@@ -37,7 +37,7 @@ public class MappingsMojo
      * @parameter
      * @required
      */
-    private Map classes;
+    private Map<String, String> classes;
 
     /**
      * A Java class name. 
@@ -62,9 +62,9 @@ public class MappingsMojo
             getLog().warn( "No mapping set" );
         }
 
-        for ( Iterator iterator = classes.entrySet().iterator(); iterator.hasNext(); )
+        for ( Iterator<Map.Entry<String, String>> iterator = classes.entrySet().iterator(); iterator.hasNext(); )
         {
-            Map.Entry entry = (Map.Entry) iterator.next();
+            Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
             className = (String) entry.getKey();
             mappingName = (String) entry.getValue();
             super.execute();
