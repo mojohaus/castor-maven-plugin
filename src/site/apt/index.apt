@@ -13,6 +13,10 @@ Castor Maven Plugin
   Castor XML's code generator for generating Java beans and associated descriptor 
   classes (required for marshalling to and unmarshalling from XML documents)
   from XML Schema files.
+  
+  Please note that starting with version 2.0 of this plugin, Castor 1.3 is introduced
+  as dependency, and as such Java 1.4 will not be supported anymore. If you require to 
+  execute this plugin on Java 1.4, please use version 1.5 of this plugin.
 
 * Goals Overview
 
