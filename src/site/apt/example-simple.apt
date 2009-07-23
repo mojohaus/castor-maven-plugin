@@ -6,7 +6,7 @@
  July 14, 2009
  ------
 
-Generating sources from a single XMl schema
+Generating sources from a single XML schema
 
   To generate Java sources from a single XML schema named <<<schema.xsd>>> (located 
   at the default location, i.e. src/main/castor) using the Maven plugin for Castor, 
