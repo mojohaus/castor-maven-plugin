@@ -55,6 +55,8 @@ Castor Maven Plugin
   To provide you with better understanding of some usages of the Castor Plugin,
   you can take a look into the following examples:
 
+  * {{{example-default.html}Generating sources from all XML schemas at the default location}}
+
   * {{{example-simple.html}Generating sources from a single XML schema}}
 
 * References
