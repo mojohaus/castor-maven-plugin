@@ -139,6 +139,22 @@ public class GenerateMojoTest
         assertTrue(new File(GENERATED_DIR, "MainType.java").exists());
     }
 
+    public void testGenerateWithVelocity()
+    throws MojoExecutionException
+{
+
+    generateMojo.setSchema( new File ( getPathTo("src/test/resources/main.xsd") ) );
+    generateMojo.setProperties( new File ( getPathTo("src/test/resources/castorbuilder.properties") ) );
+    generateMojo.setTypes("arraylist");
+    generateMojo.setGenerateImportedSchemas(true);
+    generateMojo.setClassPrinterMethod("velocity");
+    generateMojo.setPackaging("org.codehaus.mojo.castor.velocity");
+    generateMojo.execute();
+
+    assertTrue(new File(GENERATED_DIR, "org/codehaus/mojo/castor/velocity/Main.java").exists());
+    assertTrue(new File(GENERATED_DIR, "org/codehaus/mojo/castor/velocity/MainType.java").exists());
+}
+
     public void testGenerateWithMappings()
     throws MojoExecutionException
     {

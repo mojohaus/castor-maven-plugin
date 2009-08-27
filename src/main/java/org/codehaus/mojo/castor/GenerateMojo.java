@@ -33,7 +33,6 @@ import org.codehaus.plexus.compiler.util.scan.StaleSourceScanner;
 import org.codehaus.plexus.compiler.util.scan.mapping.SourceMapping;
 import org.codehaus.plexus.compiler.util.scan.mapping.SuffixMapping;
 import org.codehaus.plexus.util.FileUtils;
-import org.exolab.castor.builder.SourceGenerator;
 
 /**
  * A mojo that uses Castor to generate a collection of javabeans from an XSD. Detailed explanations of many of these can
@@ -172,6 +171,14 @@ public class GenerateMojo
      * @parameter default-value="false"
      */
     private boolean generateMappings = false;
+    
+    /**
+     * The method to use for Java class generation; possible values are 
+     * 'standard' (default) and 'velocity'. 
+     * 
+     * @parameter default-value="standard"
+     */
+    private String classPrinterMethod = "standard";
 
     /**
      * The Maven project to act upon.
@@ -400,6 +407,12 @@ public class GenerateMojo
         {
             sgen.setGenerateMappingFile( this.generateMappings );
             sgen.setDescriptorCreation( false );
+        }
+
+        if ( !getClassPrinterMethod().equals( "standard" ) )
+        {
+            callSetterMethodUsingReflection( "setJClassPrinterType", String.class,
+                                             getClassPrinterMethod() );
         }
 
     }
@@ -672,6 +685,22 @@ public class GenerateMojo
     public final void setGenerateMappings( final boolean generateMappings )
     {
         this.generateMappings = generateMappings;
+    }
+
+    /**
+     * Returns the method to use for Java class generation 
+     */ 
+    public String getClassPrinterMethod() {
+        return this.classPrinterMethod;
+    }
+
+    /**
+     * Sets the method to use for Java class generation; possible values are 
+     * 'standard' (default) and 'velocity'. 
+     * @param classPrinterMethod The class generation mode to use.
+     */
+    public void setClassPrinterMethod(final String classPrinterMethod) {
+        this.classPrinterMethod = classPrinterMethod;
     }
 
 }
