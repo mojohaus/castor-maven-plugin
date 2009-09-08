@@ -4,7 +4,10 @@
       <author email="wguttmn@codehaus.org">Werner Guttmann</author>
    </properties>
    <body>
-      <release version="2.0" date="2009-07-15" description="Subsequent release">
+   
+      <release version="2.0" date="2009-09-09" description="Release 2.0">
+      </release>
+      <release version="1.5" date="2009-07-15" description="Subsequent release">
          <action dev="wguttmn" type="fix" issue="MCASTOR-24">Added property to allow generation of mapping files.</action>
          <action dev="wguttmn" type="fix" issue="MCASTOR-25">Added property to allow generation of JDO descriptors.</action>
          <action dev="wguttmn" type="fix" issue="MCASTOR-18">Removed hard-coding of schema directory for Clover runs.</action>
