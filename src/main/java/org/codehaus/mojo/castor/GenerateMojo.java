@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -33,6 +34,7 @@ import org.codehaus.plexus.compiler.util.scan.StaleSourceScanner;
 import org.codehaus.plexus.compiler.util.scan.mapping.SourceMapping;
 import org.codehaus.plexus.compiler.util.scan.mapping.SuffixMapping;
 import org.codehaus.plexus.util.FileUtils;
+import org.exolab.castor.util.Version;
 
 /**
  * A mojo that uses Castor to generate a collection of javabeans from an XSD. Detailed explanations of many of these can
@@ -181,6 +183,20 @@ public class GenerateMojo
     private String classPrinterMethod = "standard";
 
     /**
+     * The directory to output generated <b>resources</b> files to. 
+     * 
+     * @parameter expression="${project.build.directory}/generated-sources/castor"
+     */
+    private File resourceDestination;
+    
+    /**
+     * Whether to generate JDO-specific descriptor classes or not.
+     * 
+     * @parameter default-value="false"
+     */
+    private boolean createJdoDescriptors = false;
+    
+    /**
      * The Maven project to act upon.
      * @parameter expression="${project}"
      * @required
@@ -193,13 +209,6 @@ public class GenerateMojo
      * @see SourceGenerator#generateSource(org.xml.sax.InputSource, String)
      */
     private CastorSourceGenerator sgen;
-
-    /**
-     * Whether to generate JDO-specific descriptor classes or not.
-     * 
-     * @parameter default-value="false"
-     */
-    private boolean createJdoDescriptors = false;
 
     /**
      * {@inheritDoc}
@@ -215,12 +224,28 @@ public class GenerateMojo
             FileUtils.mkdir( dest.getAbsolutePath() );
         }
 
+        if ( !resourceDestination.exists() )
+        {
+            FileUtils.mkdir( resourceDestination.getAbsolutePath() );
+        }
+
         Set<File> staleXSDs = computeStaleXSDs();
 
         if ( staleXSDs.isEmpty() )
         {
             getLog().info( "Nothing to process - all xsds are up to date" );
+            
+            // adding generated sources to Maven project 
             project.addCompileSourceRoot( dest.getAbsolutePath() );
+
+            // adding resources directory to Maven project
+            getLog().info( "Adding resource " + getResourceDestination().getAbsolutePath() + " ... " );
+            Resource resource = new Resource();
+            resource.setDirectory( getResourceDestination().getAbsolutePath() );
+            resource.addInclude( "**/*.cdr" );
+            resource.addExclude( "**/*.java" );
+            project.addResource( resource );
+            
             return;
         }
 
@@ -254,10 +279,16 @@ public class GenerateMojo
         if ( project != null )
         {
             project.addCompileSourceRoot( dest.getAbsolutePath() );
-            
-            // TODO: add .castor.cdr files automatically
-//            project.addTestResource( testResource );
+
+            // adding resources directory to Maven project
+            getLog().info( "Adding resource " + getResourceDestination().getAbsolutePath() + " ... " );
+            Resource resource = new Resource();
+            resource.setDirectory( getResourceDestination().getAbsolutePath() );
+            resource.addInclude( "**/*.cdr" );
+            resource.addExclude( "**/*.java" );
+            project.addResource( resource );
         }
+        
     }
 
     /**
@@ -343,12 +374,21 @@ public class GenerateMojo
         throws MojoExecutionException
     {
         sgen = CastorSourceGenerator.createSourceGenerator( types );
+        
+        if ( getLog().isInfoEnabled() ) {
+            getLog().info(
+                    "Successfully created an instance of the Castor XML source generator, release "
+                            + Version.VERSION );
+        }
 
         sgen.setLog( getLog() );
 
         sgen.setLineSeparatorStyle( lineSeparator );
 
         sgen.setDestDir( dest.getAbsolutePath() );
+        
+        callSetterMethodUsingReflection( "setResourceDestination", String.class,
+                getResourceDestination().getAbsolutePath() );
 
         if ( bindingfile != null && bindingfile.exists() )
         {
@@ -429,6 +469,8 @@ public class GenerateMojo
                                                   final Object parameterValue )
         throws MojoExecutionException
     {
+        getLog().info( "About to invoke method >" + methodName
+                + "< on Castor's SourceGenerator class using reflection." );
         try
         {
             Method method = sgen.getClass().getMethod( methodName, new Class[] { parameterType } );
@@ -436,19 +478,20 @@ public class GenerateMojo
         }
         catch ( NoSuchMethodException e )
         {
+            getLog().info( "Specified method " + methodName + " not available on class SourceGenerator." );
             // unable to find method to configure JDO descriptor creation.
         }
         catch ( IllegalArgumentException e )
         {
-            throw new MojoExecutionException( "Problem calling SourceGenerator.setJdoDescriptorCreation: ", e );
+            throw new MojoExecutionException( "Problem calling SourceGenerator." + methodName + ": ", e );
         }
         catch ( IllegalAccessException e )
         {
-            throw new MojoExecutionException( "Problem calling SourceGenerator.setJdoDescriptorCreation: ", e );
+            throw new MojoExecutionException( "Problem calling SourceGenerator." + methodName + ": ", e );
         }
         catch ( InvocationTargetException e )
         {
-            throw new MojoExecutionException( "Problem calling SourceGenerator.setJdoDescriptorCreation: ", e );
+            throw new MojoExecutionException( "Problem calling SourceGenerator." + methodName + ": ", e );
         }
     }
 
@@ -499,6 +542,17 @@ public class GenerateMojo
     }
 
     /**
+     * Returns the destination directory for resource files generated 
+     * during code generation.
+     * 
+     * @return the destination directory for resource files.
+     */
+    public File getResourceDestination()
+    {
+        return this.resourceDestination;
+    }
+
+    /**
      * Sets the destination directory to used during code generation.
      * @param dest the destination directory to used during code generation.
      */
@@ -507,6 +561,17 @@ public class GenerateMojo
         this.dest = dest;
     }
 
+    /**
+     * Sets the destination directory for resource files generated during 
+     * code generation.
+     * 
+     * @param rsourceDestination the destination directory for generated resource files.
+     */
+    public void setResourceDestination( final File resourceDestination )
+    {
+        this.resourceDestination = resourceDestination;
+    }
+    
     /**
      * Returns the directory to store time stamp information.
      * @return the directory to store time stamp information.

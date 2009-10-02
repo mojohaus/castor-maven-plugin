@@ -24,6 +24,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
+import org.exolab.castor.util.Version;
 
 public class GenerateMojoTest
     extends PlexusTestCase
@@ -33,6 +34,8 @@ public class GenerateMojoTest
 
     private static final String GENERATED_DIR = getBasedir() + "/target/generated-sources/castor";
 
+    private static final String GENERATED_RESOURCES_DIR = getBasedir() + "/target/generated-resources/castor";
+
     private static final String MAPPING_XSD = getBasedir() + "/src/test/resources/mapping.xml";
 
     GenerateMojo generateMojo;
@@ -41,20 +44,26 @@ public class GenerateMojoTest
 
     private File aDescriptorClassFile;
 
+    private double castorVersion;
+
     public void setUp()
         throws IOException
     {
 //    	FileUtils.deleteDirectory( new File( getBasedir() + "/target/test" ) );
         FileUtils.deleteDirectory( new File( GENERATED_DIR ) );
+        FileUtils.deleteDirectory( new File( GENERATED_RESOURCES_DIR ) );
         FileUtils.deleteDirectory( new File( TIMESTAMP_DIR ) );
 
         aClassFile = new File( GENERATED_DIR, "org/codehaus/mojo/castor/A.java" );
         aDescriptorClassFile = new File( GENERATED_DIR, "org/codehaus/mojo/castor/descriptors/ADescriptor.java" );
 
-        generateMojo = new GenerateMojo();
-        generateMojo.setProject( new MavenProject( new Model() ) );
-        generateMojo.setDest( new File ( GENERATED_DIR ));
-        generateMojo.setTstamp( new File ( TIMESTAMP_DIR ) );
+        this.generateMojo = new GenerateMojo();
+        this.generateMojo.setProject( new MavenProject( new Model() ) );
+        this.generateMojo.setDest( new File ( GENERATED_DIR ) );
+        this.generateMojo.setResourceDestination( new File ( GENERATED_RESOURCES_DIR ) );
+        this.generateMojo.setTstamp( new File ( TIMESTAMP_DIR ) );
+        
+        this.castorVersion = getCastorVersion();
     }
 
     public void tearDown()
@@ -141,20 +150,59 @@ public class GenerateMojoTest
 
     public void testGenerateWithVelocity()
     throws MojoExecutionException
-{
+    {
 
-    generateMojo.setSchema( new File ( getPathTo("src/test/resources/main.xsd") ) );
-    generateMojo.setProperties( new File ( getPathTo("src/test/resources/castorbuilder.properties") ) );
-    generateMojo.setTypes("arraylist");
-    generateMojo.setGenerateImportedSchemas(true);
-    generateMojo.setClassPrinterMethod("velocity");
-    generateMojo.setPackaging("org.codehaus.mojo.castor.velocity");
-    generateMojo.execute();
+        generateMojo.setSchema( new File ( getPathTo("src/test/resources/main.xsd") ) );
+        generateMojo.setProperties( new File ( getPathTo("src/test/resources/castorbuilder.properties") ) );
+        generateMojo.setTypes("arraylist");
+        generateMojo.setGenerateImportedSchemas(true);
+        generateMojo.setClassPrinterMethod("velocity");
+        generateMojo.setPackaging("org.codehaus.mojo.castor.velocity");
+        generateMojo.execute();
 
-    assertTrue(new File(GENERATED_DIR, "org/codehaus/mojo/castor/velocity/Main.java").exists());
-    assertTrue(new File(GENERATED_DIR, "org/codehaus/mojo/castor/velocity/MainType.java").exists());
-}
+        assertTrue(new File(GENERATED_DIR, "org/codehaus/mojo/castor/velocity/Main.java").exists());
+        assertTrue(new File(GENERATED_DIR, "org/codehaus/mojo/castor/velocity/MainType.java").exists());
+    }
 
+    public void testGenerateWithSeparateResourceDirectory()
+    throws MojoExecutionException
+    {
+
+        // configure MOJO 
+        generateMojo.setSchema( new File ( getPathTo("src/test/resources/main.xsd") ) );
+        generateMojo.setProperties( new File ( getPathTo("src/test/resources/castorbuilder.properties") ) );
+        generateMojo.setTypes("arraylist");
+        generateMojo.setGenerateImportedSchemas(true);
+        generateMojo.setPackaging("org.codehaus.mojo.castor.velocity");
+        generateMojo.setResourceDestination( new File ( GENERATED_RESOURCES_DIR ));
+        
+        // execute MOJO
+        generateMojo.execute();
+
+        // test assertions
+        String packagePath = "org/codehaus/mojo/castor/velocity/";
+        assertTrue(new File(GENERATED_DIR, packagePath + "Main.java").exists());
+        assertTrue(new File(GENERATED_DIR, packagePath + "MainType.java").exists());
+        if (this.castorVersion > 1.301) {
+            assertTrue(new File(GENERATED_RESOURCES_DIR, packagePath + "/.castor.cdr").exists());
+        } else {
+            assertFalse(new File(GENERATED_RESOURCES_DIR, packagePath + "/.castor.cdr").exists());
+        }
+    }
+    
+    private double getCastorVersion() {
+        String text = Version.VERSION;
+        int firstPoint = text.indexOf(".");
+        double version = Double.valueOf(text.substring(0, firstPoint)); 
+        String[] tokens = text.substring(firstPoint + 1).split("\\.");
+        int i = 10;
+        for (String token: tokens) {
+            version = version + Double.valueOf(token)/i;
+            i = i * 10;
+        }
+        return version;
+    }
+    
     public void testGenerateWithMappings()
     throws MojoExecutionException
     {
@@ -166,7 +214,7 @@ public class GenerateMojoTest
         generateMojo.execute();
 
         assertTrue( new File ( GENERATED_DIR, "Main.java" ).exists());
-        assertTrue( new File ( "target/test-classes", "mapping.xml" ).exists());
+        assertTrue( new File ( getBasedir() , "mapping.xml" ).exists());
         
         FileUtils.deleteQuietly( new File( "target/test-classes", "mapping.xml" ) );
     }
