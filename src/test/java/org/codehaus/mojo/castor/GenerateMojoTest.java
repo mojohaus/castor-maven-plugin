@@ -156,7 +156,7 @@ public class GenerateMojoTest
         generateMojo.setProperties( new File ( getPathTo("src/test/resources/castorbuilder.properties") ) );
         generateMojo.setTypes("arraylist");
         generateMojo.setGenerateImportedSchemas(true);
-        generateMojo.setClassPrinterMethod("velocity");
+        generateMojo.setClassGenerationMode("velocity");
         generateMojo.setPackaging("org.codehaus.mojo.castor.velocity");
         generateMojo.execute();
 
