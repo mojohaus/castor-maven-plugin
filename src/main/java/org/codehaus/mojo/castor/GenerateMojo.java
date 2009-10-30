@@ -173,31 +173,31 @@ public class GenerateMojo
      * @parameter default-value="false"
      */
     private boolean generateMappings = false;
-    
+
     /**
-     * The method to use for Java class generation; possible values are 
-     * 'standard' (default) and 'velocity'. 
+     * The method to use for Java class generation; possible values are 'standard' (default) and 'velocity'.
      * 
      * @parameter default-value="standard"
      */
     private String classPrinterMethod = "standard";
 
     /**
-     * The directory to output generated <b>resources</b> files to. 
+     * The directory to output generated <b>resources</b> files to.
      * 
      * @parameter expression="${project.build.directory}/generated-sources/castor"
      */
     private File resourceDestination;
-    
+
     /**
      * Whether to generate JDO-specific descriptor classes or not.
      * 
      * @parameter default-value="false"
      */
     private boolean createJdoDescriptors = false;
-    
+
     /**
      * The Maven project to act upon.
+     * 
      * @parameter expression="${project}"
      * @required
      */
@@ -234,8 +234,8 @@ public class GenerateMojo
         if ( staleXSDs.isEmpty() )
         {
             getLog().info( "Nothing to process - all xsds are up to date" );
-            
-            // adding generated sources to Maven project 
+
+            // adding generated sources to Maven project
             project.addCompileSourceRoot( dest.getAbsolutePath() );
 
             // adding resources directory to Maven project
@@ -245,7 +245,7 @@ public class GenerateMojo
             resource.addInclude( "**/*.cdr" );
             resource.addExclude( "**/*.java" );
             project.addResource( resource );
-            
+
             return;
         }
 
@@ -288,15 +288,14 @@ public class GenerateMojo
             resource.addExclude( "**/*.java" );
             project.addResource( resource );
         }
-        
+
     }
 
     /**
-     * Computes the collection of <i>stale</i> XML schemas for which 
-     * sources need to be re-generated.
+     * Computes the collection of <i>stale</i> XML schemas for which sources need to be re-generated.
+     * 
      * @return A set of XML schemas for which sources need to be re-generated.
-     * @throws MojoExecutionException If there's a problem with scanning all potential
-     *    XML schemas. 
+     * @throws MojoExecutionException If there's a problem with scanning all potential XML schemas.
      */
     private Set<File> computeStaleXSDs()
         throws MojoExecutionException
@@ -348,6 +347,7 @@ public class GenerateMojo
 
     /**
      * Returns a {@link SourceInclusionScanner} instance.
+     * 
      * @return A {@link SourceInclusionScanner} instance.
      */
     private SourceInclusionScanner getSourceInclusionScanner()
@@ -357,6 +357,7 @@ public class GenerateMojo
 
     /**
      * Returns the location where timestamp information is recorded.
+     * 
      * @return the location where timestamp information is recorded.
      */
     private File getTimeStampDirectory()
@@ -365,20 +366,20 @@ public class GenerateMojo
     }
 
     /**
-     * Entry point for configuring the underlying Castor XML code generator
-     * based upon the plugin configuration.
-     * @throws MojoExecutionException If there's a problem accessing resources as specified 
-     * in the plugin configuration.
+     * Entry point for configuring the underlying Castor XML code generator based upon the plugin configuration.
+     * 
+     * @throws MojoExecutionException If there's a problem accessing resources as specified in the plugin configuration.
      */
     private void config()
         throws MojoExecutionException
     {
         sgen = CastorSourceGenerator.createSourceGenerator( types );
-        
-        if ( getLog().isInfoEnabled() ) {
+
+        if ( getLog().isInfoEnabled() )
+        {
             getLog().info(
-                    "Successfully created an instance of the Castor XML source generator, release "
-                            + Version.VERSION );
+                           "Successfully created an instance of the Castor XML source generator, release "
+                               + Version.VERSION );
         }
 
         sgen.setLog( getLog() );
@@ -386,9 +387,9 @@ public class GenerateMojo
         sgen.setLineSeparatorStyle( lineSeparator );
 
         sgen.setDestDir( dest.getAbsolutePath() );
-        
+
         callSetterMethodUsingReflection( "setResourceDestination", String.class,
-                getResourceDestination().getAbsolutePath() );
+                                         getResourceDestination().getAbsolutePath() );
 
         if ( bindingfile != null && bindingfile.exists() )
         {
@@ -451,8 +452,7 @@ public class GenerateMojo
 
         if ( !getClassPrinterMethod().equals( "standard" ) )
         {
-            callSetterMethodUsingReflection( "setJClassPrinterType", String.class,
-                                             getClassPrinterMethod() );
+            callSetterMethodUsingReflection( "setJClassPrinterType", String.class, getClassPrinterMethod() );
         }
 
     }
@@ -469,8 +469,9 @@ public class GenerateMojo
                                                   final Object parameterValue )
         throws MojoExecutionException
     {
-        getLog().info( "About to invoke method >" + methodName
-                + "< on Castor's SourceGenerator class using reflection." );
+        getLog().info(
+                       "About to invoke method >" + methodName
+                           + "< on Castor's SourceGenerator class using reflection." );
         try
         {
             Method method = sgen.getClass().getMethod( methodName, new Class[] { parameterType } );
@@ -497,6 +498,7 @@ public class GenerateMojo
 
     /**
      * Run source generation on the {@link File} soecified.
+     * 
      * @path filePath The XML schema file (path) to be processed.
      */
     private void processFile( String filePath )
@@ -525,6 +527,7 @@ public class GenerateMojo
 
     /**
      * Logs a message to the logger.
+     * 
      * @param msg The message ot be logged.
      */
     private void log( final String msg )
@@ -534,6 +537,7 @@ public class GenerateMojo
 
     /**
      * Returns the destination directory to used during code generation.
+     * 
      * @return the destination directory to used during code generation.
      */
     public File getDest()
@@ -542,8 +546,7 @@ public class GenerateMojo
     }
 
     /**
-     * Returns the destination directory for resource files generated 
-     * during code generation.
+     * Returns the destination directory for resource files generated during code generation.
      * 
      * @return the destination directory for resource files.
      */
@@ -554,6 +557,7 @@ public class GenerateMojo
 
     /**
      * Sets the destination directory to used during code generation.
+     * 
      * @param dest the destination directory to used during code generation.
      */
     public void setDest( final File dest )
@@ -562,8 +566,7 @@ public class GenerateMojo
     }
 
     /**
-     * Sets the destination directory for resource files generated during 
-     * code generation.
+     * Sets the destination directory for resource files generated during code generation.
      * 
      * @param rsourceDestination the destination directory for generated resource files.
      */
@@ -571,9 +574,10 @@ public class GenerateMojo
     {
         this.resourceDestination = resourceDestination;
     }
-    
+
     /**
      * Returns the directory to store time stamp information.
+     * 
      * @return the directory to store time stamp information.
      */
     public File getTstamp()
@@ -583,6 +587,7 @@ public class GenerateMojo
 
     /**
      * Sets the directory to store time stamp information.
+     * 
      * @param tstamp the directory to store time stamp information.
      */
     public void setTstamp( final File tstamp )
@@ -592,6 +597,7 @@ public class GenerateMojo
 
     /**
      * Returns the default package to be used during code generation.
+     * 
      * @return the default package to be used during code generation.
      */
     public String getPackaging()
@@ -601,6 +607,7 @@ public class GenerateMojo
 
     /**
      * Sets the default package to be used during code generation.
+     * 
      * @param packaging the default package to be used during code generation.
      */
     public void setPackaging( final String packaging )
@@ -610,6 +617,7 @@ public class GenerateMojo
 
     /**
      * Returns the (single) XML schema file to be processed.
+     * 
      * @return the (single) XML schema file to be processed.
      */
     public File getSchema()
@@ -619,6 +627,7 @@ public class GenerateMojo
 
     /**
      * Sets the (single) XML schema file to be processed.
+     * 
      * @param schema the (single) XML schema file to be processed.
      */
     public void setSchema( final File schema )
@@ -628,6 +637,7 @@ public class GenerateMojo
 
     /**
      * Returns the collection types Castor XML is capable of working with.
+     * 
      * @return the collection types Castor XML is capable of working with.
      */
     public String getTypes()
@@ -637,6 +647,7 @@ public class GenerateMojo
 
     /**
      * Sets the collection types Castor XML is capable of working with.
+     * 
      * @param types the collection types Castor XML is capable of working with.
      */
     public void setTypes( final String types )
@@ -646,6 +657,7 @@ public class GenerateMojo
 
     /**
      * Sets the Castor XML code generator binding file to be used during code generation.
+     * 
      * @param bindingfile the Castor XML code generator binding file to be used during code generation.
      */
     public void setBindingfile( final File bindingfile )
@@ -655,6 +667,7 @@ public class GenerateMojo
 
     /**
      * Sets the (user-specific) <tt>castorbuilder.properties</tt> file to be used during code generation.
+     * 
      * @param properties the (user-specific) <tt>castorbuilder.properties</tt> file to be used during code generation.
      */
     public void setProperties( final File properties )
@@ -664,6 +677,7 @@ public class GenerateMojo
 
     /**
      * Indicates whether #marshal() methods will be generated during the code generation.
+     * 
      * @return True if #marshal() methods will be generated during the code generation.
      */
     public boolean getMarshal()
@@ -673,6 +687,7 @@ public class GenerateMojo
 
     /**
      * Sets whether #marshal() methods will be generated during the code generation.
+     * 
      * @param marshal True if #marshal() methods will be generated during the code generation.
      */
     public void setMarshal( final boolean marshal )
@@ -681,7 +696,8 @@ public class GenerateMojo
     }
 
     /**
-     * Indicates whether code should be generated for imported XML schemas as well. 
+     * Indicates whether code should be generated for imported XML schemas as well.
+     * 
      * @return True if code should be generated for imported XML schemas as well.
      */
     public boolean isGenerateImportedSchemas()
@@ -691,6 +707,7 @@ public class GenerateMojo
 
     /**
      * Sets whether code should be generated for imported XML schemas as well.
+     * 
      * @param generateImportedSchemas True if code should be generated for imported XML schemas as well.
      */
     public void setGenerateImportedSchemas( final boolean generateImportedSchemas )
@@ -700,6 +717,7 @@ public class GenerateMojo
 
     /**
      * Returns the {@link MavenProject} instance for which code generation should be executed.
+     * 
      * @return the {@link MavenProject} instance for which code generation should be executed.
      */
     public MavenProject getProject()
@@ -709,6 +727,7 @@ public class GenerateMojo
 
     /**
      * Sets the {@link MavenProject} instance for which code generation should be executed.
+     * 
      * @param project the {@link MavenProject} instance for which code generation should be executed.
      */
     public void setProject( MavenProject project )
@@ -718,6 +737,7 @@ public class GenerateMojo
 
     /**
      * Indicates whether JDO descriptors should be generated during code generation.
+     * 
      * @return True if JDO descriptors should be generated during code generation.
      */
     public final boolean getCreateJdoDescriptors()
@@ -727,6 +747,7 @@ public class GenerateMojo
 
     /**
      * Sets whether JDO descriptors should be generated during code generation.
+     * 
      * @param newCreateJdoDescriptors True if JDO descriptors should be generated during code generation.
      */
     public final void setCreateJdoDescriptors( final boolean newCreateJdoDescriptors )
@@ -736,6 +757,7 @@ public class GenerateMojo
 
     /**
      * Indicates whether mapping files should be created during code generation.
+     * 
      * @return True if mapping files should be created during code generation
      */
     private boolean generateMapping()
@@ -745,6 +767,7 @@ public class GenerateMojo
 
     /**
      * Sets whether mapping files should be created during code generation.
+     * 
      * @param generateMappings True if mapping files should be created during code generation.
      */
     public final void setGenerateMappings( final boolean generateMappings )
@@ -753,18 +776,20 @@ public class GenerateMojo
     }
 
     /**
-     * Returns the method to use for Java class generation 
-     */ 
-    public String getClassPrinterMethod() {
+     * Returns the method to use for Java class generation
+     */
+    public String getClassPrinterMethod()
+    {
         return this.classPrinterMethod;
     }
 
     /**
-     * Sets the method to use for Java class generation; possible values are 
-     * 'standard' (default) and 'velocity'. 
+     * Sets the method to use for Java class generation; possible values are 'standard' (default) and 'velocity'.
+     * 
      * @param classPrinterMethod The class generation mode to use.
      */
-    public void setClassPrinterMethod(final String classPrinterMethod) {
+    public void setClassPrinterMethod( final String classPrinterMethod )
+    {
         this.classPrinterMethod = classPrinterMethod;
     }
 

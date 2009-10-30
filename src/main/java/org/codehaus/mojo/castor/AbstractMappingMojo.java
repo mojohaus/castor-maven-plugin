@@ -44,6 +44,7 @@ public abstract class AbstractMappingMojo
 {
     /**
      * The Maven project to act upon.
+     * 
      * @parameter expression="${project}"
      * @required
      */
@@ -51,6 +52,7 @@ public abstract class AbstractMappingMojo
 
     /**
      * Whether to force generation of mapping file where one already exists.
+     * 
      * @parameter default-value="false"
      */
     private boolean force;
@@ -125,6 +127,7 @@ public abstract class AbstractMappingMojo
 
     /**
      * Returns the private project {@link ClassLoader}.
+     * 
      * @return A project-specific {@link ClassLoader}.
      * @throws DependencyResolutionRequiredException If a dependecy cannot be resolved.
      * @throws MalformedURLException If an URL is malformed.
@@ -159,12 +162,14 @@ public abstract class AbstractMappingMojo
 
     /**
      * Returns the class name.
+     * 
      * @return the classname
      */
     protected abstract String getClassName();
 
     /**
      * Returns the name of the mapping file.
+     * 
      * @return the mappingName
      */
     protected abstract String getMappingName();

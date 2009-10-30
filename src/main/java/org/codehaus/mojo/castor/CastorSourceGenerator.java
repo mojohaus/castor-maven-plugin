@@ -204,8 +204,8 @@ class CastorSourceGenerator
 
     /**
      * Indicates whether source generation should be 'verbose'.
-     * @param verbose True if source generation should be 'verbose'.
      * 
+     * @param verbose True if source generation should be 'verbose'.
      * @see org.exolab.castor.builder.SourceGenerator#setVerbose(boolean)
      */
     public void setVerbose( final boolean verbose )

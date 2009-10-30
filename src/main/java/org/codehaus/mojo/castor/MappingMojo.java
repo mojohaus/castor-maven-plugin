@@ -28,6 +28,7 @@ public class MappingMojo
 {
     /**
      * The name of the Java class from which a mapping file should be generated.
+     * 
      * @parameter
      * @required
      */
@@ -35,6 +36,7 @@ public class MappingMojo
 
     /**
      * Name of the mapping file to be generated.
+     * 
      * @parameter
      * @required
      */

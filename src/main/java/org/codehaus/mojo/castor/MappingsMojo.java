@@ -34,13 +34,14 @@ public class MappingsMojo
 {
     /**
      * A set of Java classes for which a mapping file should be generated.
+     * 
      * @parameter
      * @required
      */
     private Map<String, String> classes;
 
     /**
-     * A Java class name. 
+     * A Java class name.
      */
     private String className;
 
@@ -73,6 +74,7 @@ public class MappingsMojo
 
     /**
      * Returns the class name.
+     * 
      * @return the classname
      */
     protected String getClassName()
@@ -82,6 +84,7 @@ public class MappingsMojo
 
     /**
      * Returns the mapping file name.
+     * 
      * @return the mappingName
      */
     protected String getMappingName()
