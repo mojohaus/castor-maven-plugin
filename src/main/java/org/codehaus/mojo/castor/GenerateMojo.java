@@ -50,11 +50,20 @@ public class GenerateMojo
     extends AbstractMojo
 {
 
+    /**
+     * Output message to indicate that class descriptor generation is disabled.
+     */
     private static final String DISABLE_DESCRIPTORS_MSG = "Disabling generation of Class descriptors";
 
+    /**
+     * Output message to indicate that generation of marshaling framework methods is disabled.
+     */
     private static final String DISABLE_MARSHALL_MSG =
         "Disabling generation of Marshalling framework methods (marshall, unmarshall, validate).";
 
+    /**
+     * Default location of castorbuilder.properties file.
+     */
     private static final String DEFAULT_PROPERTY_FILE_LOCATION = "src/main/castor/castorbuilder.properties";
 
     /**
@@ -179,7 +188,7 @@ public class GenerateMojo
      * 
      * @parameter default-value="standard"
      */
-    private String classPrinterMethod = "standard";
+    private String classGenerationMode = "standard";
 
     /**
      * The directory to output generated <b>resources</b> files to.
@@ -450,9 +459,9 @@ public class GenerateMojo
             sgen.setDescriptorCreation( false );
         }
 
-        if ( !getClassPrinterMethod().equals( "standard" ) )
+        if ( !getClassGenerationMode().equals( "standard" ) )
         {
-            callSetterMethodUsingReflection( "setJClassPrinterType", String.class, getClassPrinterMethod() );
+            callSetterMethodUsingReflection( "setJClassPrinterType", String.class, getClassGenerationMode() );
         }
 
     }
@@ -499,7 +508,8 @@ public class GenerateMojo
     /**
      * Run source generation on the {@link File} soecified.
      * 
-     * @path filePath The XML schema file (path) to be processed.
+     * @param filePath The XML schema file (path) to be processed.
+     * @throws MojoExecutionException If there's a problem related to executing this mojo.
      */
     private void processFile( String filePath )
         throws MojoExecutionException
@@ -568,7 +578,7 @@ public class GenerateMojo
     /**
      * Sets the destination directory for resource files generated during code generation.
      * 
-     * @param rsourceDestination the destination directory for generated resource files.
+     * @param resourceDestination the destination directory for generated resource files.
      */
     public void setResourceDestination( final File resourceDestination )
     {
@@ -776,11 +786,13 @@ public class GenerateMojo
     }
 
     /**
-     * Returns the method to use for Java class generation
+     * Returns the method to use for Java class generation.
+     * 
+     * @return The method to use for Java class generation.
      */
-    public String getClassPrinterMethod()
+    public String getClassGenerationMode()
     {
-        return this.classPrinterMethod;
+        return this.classGenerationMode;
     }
 
     /**
@@ -788,9 +800,9 @@ public class GenerateMojo
      * 
      * @param classPrinterMethod The class generation mode to use.
      */
-    public void setClassPrinterMethod( final String classPrinterMethod )
+    public void setClassGenerationMode( final String classPrinterMethod )
     {
-        this.classPrinterMethod = classPrinterMethod;
+        this.classGenerationMode = classPrinterMethod;
     }
 
 }
