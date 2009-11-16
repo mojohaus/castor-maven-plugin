@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <parent>
       <artifactId>mojo-parent</artifactId>
       <groupId>org.codehaus.mojo</groupId>
@@ -13,8 +14,8 @@
       <maven>2.0</maven>
    </prerequisites>
    <properties>
-      <jdkLevel>1.5</jdkLevel> 
-   </properties>   
+      <jdkLevel>1.5</jdkLevel>
+   </properties>
    <issueManagement>
       <system>jira</system>
       <url>http://jira.codehaus.org/browse/MCASTOR</url>
@@ -32,35 +33,49 @@
          <distribution>repo</distribution>
       </license>
    </licenses>
-   <!-- 
-   <scm>
+   <!--
+      <scm>
       <connection>scm:svn:http://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</connection>
       <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</developerConnection>
-      <url>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</url>
-   </scm>
-    -->
-    
+      <url>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</url> </scm>
+   -->
+
    <build>
       <plugins>
          <plugin>
-            <groupId>org.apache.maven.plugins</groupId> 
-            <artifactId>maven-compiler-plugin</artifactId> 
-            <configuration> 
-                <source>1.5</source>
-                <target>1.5</target>
-            </configuration>         
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+               <source>1.5</source>
+               <target>1.5</target>
+            </configuration>
          </plugin>
-         <plugin> 
+         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-pmd-plugin</artifactId>
             <version>2.3</version>
-            <configuration> 
+            <configuration>
                <targetJdk>1.5</targetJdk>
-            </configuration> 
-         </plugin>      
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.1</version>
+            <executions>
+               <execution>
+                  <id>attach-sources</id>
+                  <phase>verify</phase>
+                  <goals>
+                     <goal>jar-no-fork</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+
       </plugins>
    </build>
-   
+
    <developers>
       <developer>
          <id>jtolentino</id>
@@ -132,12 +147,12 @@
          <version>1.3.0.1</version>
       </dependency>
       <dependency>
-        <groupId>velocity</groupId>
-        <artifactId>velocity</artifactId>
-        <version>1.5</version>
-        <scope>test</scope>
+         <groupId>velocity</groupId>
+         <artifactId>velocity</artifactId>
+         <version>1.5</version>
+         <scope>test</scope>
       </dependency>
-    
+
    </dependencies>
    <reporting>
       <plugins>
