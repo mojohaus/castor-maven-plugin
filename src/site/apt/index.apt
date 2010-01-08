@@ -27,12 +27,16 @@ Castor Maven Plugin
     (set of) XML schema(s).
     
   * {{{mapping-mojo.html}castor:mapping}} A mojo that uses Castor XML's 
-    {{{http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html}Castor MappingTool}} 
+    {{{http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html}MappingTool}} 
     to generate a default mapping file (template) from a single Java class.
     
   * {{{mappings-mojo.html}castor:mappings}} A mojo that uses Castor XML's 
-    {{{http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html}Castor MappingTool}} 
+    {{{http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html}MappingTool}} 
     to generate a default mapping file (templates) from a set of Java classes.
+
+  * {{{dtd2xsd-mojo.html}castor:dtd2xsd}} A mojo that uses Castor XML's 
+    {{{http://castor.codehaus.org/javadoc/org/exolab/castor/xml/dtd/Converter.html}DTD to XML schema converter}} 
+    to convert a DTD document to a corresponding XML schema document.
 
 * Usage
 
