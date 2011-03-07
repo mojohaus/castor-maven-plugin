@@ -35,9 +35,9 @@
    </licenses>
 
    <scm>
-      <connection>scm:svn:http://svn.codehaus.org/mojo/tags/castor-maven-plugin</connection>
-      <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin</developerConnection>
-      <url>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin</url>
+      <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/castor-maven-plugin</connection>
+      <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/castor-maven-plugin</developerConnection>
+      <url>https://fisheye.codehaus.org/browse/mojo/trunk/mojo/castor-maven-plugin</url>
    </scm>
  
    <build>
