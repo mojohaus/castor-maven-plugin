@@ -40,7 +40,13 @@
       <url>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-2.1</url>
    </scm>
  -->
- 
+
+  <scm>
+    <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/castor-maven-plugin</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/castor-maven-plugin</developerConnection>
+    <url>http://fisheye.codehaus.org/browse/mojo/trunk/mojo/castor-maven-plugin</url>
+  </scm>
+   
    <build>
       <plugins>
          <plugin>
