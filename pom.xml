@@ -33,12 +33,12 @@
          <distribution>repo</distribution>
       </license>
    </licenses>
-   <!--
-      <scm>
-      <connection>scm:svn:http://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</connection>
-      <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</developerConnection>
-      <url>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-1.5</url> </scm>
-   -->
+
+   <scm>
+      <connection>scm:svn:http://svn.codehaus.org/mojo/tags/castor-maven-plugin-2.1</connection>
+      <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-2.1</developerConnection>
+      <url>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-2.1</url>
+   </scm>
 
    <build>
       <plugins>
