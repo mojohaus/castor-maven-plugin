@@ -34,13 +34,11 @@
       </license>
    </licenses>
 
-<!-- 
    <scm>
-      <connection>scm:svn:http://svn.codehaus.org/mojo/tags/castor-maven-plugin-2.1</connection>
-      <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-2.1</developerConnection>
-      <url>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin-2.1</url>
+      <connection>scm:svn:http://svn.codehaus.org/mojo/tags/castor-maven-plugin</connection>
+      <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin</developerConnection>
+      <url>scm:svn:https://svn.codehaus.org/mojo/tags/castor-maven-plugin</url>
    </scm>
- -->
  
    <build>
       <plugins>
