@@ -34,6 +34,7 @@ import org.codehaus.plexus.compiler.util.scan.StaleSourceScanner;
 import org.codehaus.plexus.compiler.util.scan.mapping.SourceMapping;
 import org.codehaus.plexus.compiler.util.scan.mapping.SuffixMapping;
 import org.codehaus.plexus.util.FileUtils;
+import org.exolab.castor.builder.conflictresolution.WarningViaDialogClassNameCRStrategy;
 import org.exolab.castor.util.Version;
 
 /**
@@ -167,6 +168,14 @@ public class GenerateMojo
      * @parameter
      */
     private String packaging;
+
+    /**
+     * The name of the strategy to use for handling name conflicts.
+     * Can be either warnViaConsoleDialog or informViaLog
+     * 
+     * @parameter default-value="warnViaConsoleDialog"
+     */
+    private String nameConflictStrategy = WarningViaDialogClassNameCRStrategy.NAME;
 
     /**
      * Whether to generate Java classes from imported XML schemas or not.
@@ -463,6 +472,8 @@ public class GenerateMojo
         {
             callSetterMethodUsingReflection( "setJClassPrinterType", String.class, getClassGenerationMode() );
         }
+        
+        sgen.setNameConflictStrategy( this.nameConflictStrategy );
 
     }
 
@@ -626,6 +637,26 @@ public class GenerateMojo
     }
 
     /**
+     * Returns the name conflict strategy to be used during code generation.
+     * 
+     * @return the name conflict strategy to be used during code generation.
+     */
+    public String getNameConflictStrategy()
+    {
+		return nameConflictStrategy;
+	}
+
+    /**
+     * Sets the name conflict strategy to be used during code generation.
+     * 
+     * @param nameConflictStrategy the name conflict strategy to be used during code generation.
+     */
+	public void setNameConflictStrategy( final String nameConflictStrategy )
+	{
+		this.nameConflictStrategy = nameConflictStrategy;
+	}
+
+	/**
      * Returns the (single) XML schema file to be processed.
      * 
      * @return the (single) XML schema file to be processed.
