@@ -27,6 +27,9 @@ import java.util.Set;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.compiler.util.scan.InclusionScanException;
 import org.codehaus.plexus.compiler.util.scan.SourceInclusionScanner;
@@ -41,14 +44,12 @@ import org.exolab.castor.util.Version;
  * A mojo that uses Castor to generate a collection of javabeans from an XSD. Detailed explanations of many of these can
  * be found in the details for the Castor <a href="http://castor.codehaus.org/sourcegen.html">SourceGenerator</a>.
  * 
- * @goal generate
- * @phase generate-sources
  * @description Castor plugin
  * @author brozow <brozow@opennms.org>
  * @author jesse <jesse.mcconnell@gmail.com>
  */
-public class GenerateMojo
-    extends AbstractMojo
+@Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
+public class GenerateMojo extends AbstractMojo
 {
 
     /**
@@ -69,47 +70,43 @@ public class GenerateMojo
 
     /**
      * The binding file to use for mapping xml to java.
-     * 
-     * @parameter expression="${basedir}/src/main/castor/bindings.xml"
      */
+    @Parameter(property = "bindingFile", defaultValue = "${basedir}/src/main/castor/bindings.xml")
     private File bindingfile;
 
     /**
      * A schema file to process. If this is not set then all .xsd files in schemaDirectory will be processed.
-     * 
-     * @parameter
      */
+    @Parameter(property = "schema")
     private File schema;
 
     /**
      * The source directory containing *.xsd files
-     * 
-     * @parameter expression="${basedir}/src/main/castor"
      */
+    @Parameter(property = "schemaDirectory", defaultValue = "${basedir}/src/main/castor")
     private File schemaDirectory;
 
     /**
      * The directory to output the generated sources to
      * 
-     * @parameter expression="${project.build.directory}/generated-sources/castor"
      * @todo This would be better as outputDirectory but for backward compatibility I left it as dest
      */
+    @Parameter(property = "dest", defaultValue = "${project.build.directory}/generated-sources/castor")
     private File dest;
 
     /**
      * The directory to store the processed xsds. The timestamps of these xsds are used to determine if the source for
      * that xsd need to be regenerated
      * 
-     * @parameter expression="${project.build.directory}/xsds"
      * @todo timestampDirectory would be a better name for this. Used this name for backward compatibility
      */
+    @Parameter(property = "tstamp", defaultValue = "${project.build.directory}/xsds")
     private File tstamp;
 
     /**
      * The granularity in milliseconds of the last modification date for testing whether a source needs recompilation
-     * 
-     * @parameter expression="${lastModGranularityMs}" default-value="0"
      */
+    @Parameter(property = "staleMillis", defaultValue = "0")
     private int staleMillis = 0;
 
     /**
@@ -118,34 +115,31 @@ public class GenerateMojo
      * 
      * @parameter default-value="arraylist";
      */
+    @Parameter(property = "types", defaultValue = "arraylist")
     private String types = "arraylist";
 
     /**
      * If true, generate descriptors
-     * 
-     * @parameter default-value="true"
      */
+    @Parameter(property = "descriptors", defaultValue = "true")
     private boolean descriptors = true;
 
     /**
      * Verbose output during generation
-     * 
-     * @parameter default-value="false"
      */
+    @Parameter(property = "verbose", defaultValue = "false")
     private boolean verbose = false;
 
     /**
      * Enable warning messages
-     * 
-     * @parameter default-value="false"
      */
+    @Parameter(property = "warnings", defaultValue = "false")
     private boolean warnings = false;
 
     /**
      * if false, don't generate the marshaller
-     * 
-     * @parameter default-value="true"
      */
+    @Parameter(property = "marshal", defaultValue = "true")
     private boolean marshal = true;
 
     /**
@@ -153,43 +147,39 @@ public class GenerateMojo
      * 
      * @parameter
      */
+    @Parameter(property = "lineSeparator")
     private String lineSeparator;
 
     /**
      * The castorbuilder.properties file to use
-     * 
-     * @parameter expression="${basedir}/src/main/castor/castorbuilder.properties"
      */
+    @Parameter(property = "properties", defaultValue = "${basedir}/src/main/castor/castorbuilder.properties")
     private File properties;
 
     /**
      * The package for the generated source
-     * 
-     * @parameter
      */
+    @Parameter(property = "packaging")
     private String packaging;
 
     /**
      * The name of the strategy to use for handling name conflicts.
      * Can be either warnViaConsoleDialog or informViaLog
-     * 
-     * @parameter default-value="warnViaConsoleDialog"
      */
+    @Parameter(property = "nameConflictStrategy", defaultValue = WarningViaDialogClassNameCRStrategy.NAME)
     private String nameConflictStrategy = WarningViaDialogClassNameCRStrategy.NAME;
 
     /**
      * Whether to generate Java classes from imported XML schemas or not.
-     * 
-     * @parameter default-value="false"
      */
+    @Parameter(property = "generateImportedSchemas", defaultValue = "false")
     private boolean generateImportedSchemas = false;
 
     /**
      * Set to <tt>true</tt> to generate Castor XML class mappings for the Java classes generated by the XML code
      * generator from imported XML schemas.
-     * 
-     * @parameter default-value="false"
      */
+    @Parameter(property = "generateMappings", defaultValue = "false")
     private boolean generateMappings = false;
 
     /**
@@ -197,28 +187,27 @@ public class GenerateMojo
      * 
      * @parameter default-value="standard"
      */
+    @Parameter(property = "classGenerationMode", defaultValue = "standard")
     private String classGenerationMode = "standard";
 
     /**
-     * The directory to output generated <b>resources</b> files to.
-     * 
-     * @parameter expression="${project.build.directory}/generated-sources/castor"
+     * The (optional) directory to output generated <b>resources</b> files to.
      */
+    @Parameter(property = "resourceDestination", defaultValue = "${project.build.directory}/generated-sources/castor")
     private File resourceDestination;
 
     /**
      * Whether to generate JDO-specific descriptor classes or not.
-     * 
-     * @parameter default-value="false"
      */
+    @Parameter(property = "createJdoDescriptors", defaultValue = "false")
     private boolean createJdoDescriptors = false;
 
     /**
      * The Maven project to act upon.
      * 
-     * @parameter expression="${project}"
      * @required
      */
+    @Parameter(property = "project", defaultValue = "${project}", required = true)
     private MavenProject project;
 
     /**
