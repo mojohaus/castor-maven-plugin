@@ -24,8 +24,8 @@ Usage
 	must be specified or the <<<castorbuilder.properties>>> must be supplied either by putting into the
 	<<<src/main/castor>>> directory or specifying it in the configuration.
 	
-	The castorbuilder.properties must provide the namespace to package mappings for all of the xsds
-	in the <<<$\{schemaDirectory\}>>> as specified
+	The <<<castorbuilder.properties>>> must provide the namespace to package mappings for all of the XML schemas
+	in <<<$\{schemaDirectory\}>>> as specified
 	{{{http://castor.codehaus.org/sourcegen.html#Mapping-XML-namespaces-to-Java-packages}here}}.
 	
 	As an alternative to using the schemaDirectory and individual schema file can be specified via
@@ -34,8 +34,8 @@ Usage
 * Minimal configuration
 
 	This configuration generates java code for all *.xsds in <<<src/main/castor>>> to the package
-	specified in src/main/castor/castorbuilder.properties or the default package depending on the
-	contents of castorbuilder.properties.
+	specified in <<<src/main/castor/castorbuilder.properties>>> or the default package depending on the
+	definitions within <<<castorbuilder.properties>>>.
 
 	<<pom.xml>>
 	
@@ -97,4 +97,4 @@ Usage
 +-------------------
 
 	More documentation on the configuration options can be found in the description for the
-	{{{generate-mojo.html}generate goal}}.
+	{{{./generate-mojo.html}generate goal}}.

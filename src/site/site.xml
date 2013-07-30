@@ -11,9 +11,7 @@
         </menu>
         <menu name="Examples">
             <item name="A simple sample" href="example-simple.html"/>
-<!--              
             <item name="A simple sample with a property file" href="example-with-property-file.html"/>
--->            
         </menu>
     </body>
 </project>

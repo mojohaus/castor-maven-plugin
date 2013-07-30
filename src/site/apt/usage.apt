@@ -97,4 +97,4 @@ Usage
 +-------------------
 
 	More documentation on the configuration options can be found in the description for the
-	{{{generate-mojo.html}generate goal}}.
+	{{{./generate-mojo.html}generate goal}}.
