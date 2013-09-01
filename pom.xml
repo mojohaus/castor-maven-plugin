@@ -115,7 +115,7 @@
          <email>john.tolentino@mergere.com</email>
          <url>http://www.mergere.com</url>
          <organization>Mergere, Inc.</organization>
-         <timezone>+8 GMT</timezone>
+         <timezone>+8</timezone>
       </developer>
       <developer>
          <id>brozow</id>
@@ -123,7 +123,7 @@
          <email>brozow@opennms.org</email>
          <url>http://www.opennms.org</url>
          <organization>The OpenNMS Group</organization>
-         <timezone>-5 GMT</timezone>
+         <timezone>-5</timezone>
       </developer>
       <developer>
          <id>wguttmn</id>
@@ -131,7 +131,7 @@
          <email>wguttmn@codehaus.org</email>
          <url>http://www.indoqa.com</url>
          <organization>Indoqa Ltd.</organization>
-         <timezone>+1 GMT</timezone>
+         <timezone>+1</timezone>
       </developer>
    </developers>
    
