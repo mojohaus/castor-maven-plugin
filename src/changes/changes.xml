@@ -5,7 +5,7 @@
    </properties>
    <body>
 
-      <release version="2.2" date="2013-09-01" description="Bug fix release for 2.0">
+      <release version="2.5" date="2013-09-01" description="Bug fix release for 2.0">
          <action dev="wguttmn" type="fix" issue="MCASTOR-40">Added license file to project root.</action>
          <action dev="wguttmn" type="fix">Introduced maven 3.0 as requirement.</action>
          <action dev="wguttmn" type="add">Fixed broken documentation.</action>
