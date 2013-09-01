@@ -30,6 +30,7 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.exolab.castor.tools.MappingTool;
 
@@ -44,24 +45,20 @@ public abstract class AbstractMappingMojo
 {
     /**
      * The Maven project to act upon.
-     * 
-     * @parameter expression="${project}"
-     * @required
      */
+    @Parameter(property = "project", defaultValue = "${project}", required = true)
     private MavenProject project;
 
     /**
      * Whether to force generation of mapping file where one already exists.
-     * 
-     * @parameter default-value="false"
      */
+    @Parameter(property = "force", defaultValue = "false")
     private boolean force;
 
     /**
      * The output directory.
-     * 
-     * @parameter default-value="${project.build.outputDirectory}/"
      */
+    @Parameter(property = "outputDirectory", defaultValue = "${project.build.outputDirectory}")
     private File outputDirectory;
 
     /**

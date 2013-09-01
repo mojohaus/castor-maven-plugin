@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * A mojo that uses Castor MappingTool to generate mapping files from a set of Classes. <a
@@ -34,10 +35,8 @@ public class MappingsMojo
 {
     /**
      * A set of Java classes for which a mapping file should be generated.
-     * 
-     * @parameter
-     * @required
      */
+    @Parameter(property = "classes", required = true)
     private Map<String, String> classes;
 
     /**

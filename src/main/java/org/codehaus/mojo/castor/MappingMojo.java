@@ -15,6 +15,8 @@
  */
 package org.codehaus.mojo.castor;
 
+import org.apache.maven.plugins.annotations.Parameter;
+
 /**
  * A mojo that uses Castor MappingTool to generate mapping files from a single Class. <a
  * href="http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html"> MappingTool</a>.
@@ -28,18 +30,15 @@ public class MappingMojo
 {
     /**
      * The name of the Java class from which a mapping file should be generated.
-     * 
-     * @parameter
-     * @required
      */
+    @Parameter(property = "classname", required = true)
     private String className;
 
     /**
      * Name of the mapping file to be generated.
      * 
-     * @parameter
-     * @required
      */
+    @Parameter(property = "mappingName", required = true)
     private String mappingName;
 
     /**
