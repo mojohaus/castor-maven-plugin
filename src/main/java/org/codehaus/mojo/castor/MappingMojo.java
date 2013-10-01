@@ -31,7 +31,7 @@ public class MappingMojo
     /**
      * The name of the Java class from which a mapping file should be generated.
      */
-    @Parameter(property = "classname", required = true)
+    @Parameter(property = "className", required = true)
     private String className;
 
     /**

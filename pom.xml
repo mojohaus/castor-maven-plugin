@@ -11,7 +11,7 @@
    <version>2.5</version>
    
    <prerequisites>
-      <maven>3.0</maven>
+      <maven>2.2.1</maven>
    </prerequisites>
    <properties>
       <jdkLevel>1.5</jdkLevel>
