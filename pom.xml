@@ -1,9 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+<!-- 
    <parent>
       <groupId>org.codehaus.mojo</groupId>
       <artifactId>mojo-parent</artifactId>
       <version>32</version>
    </parent>
+   -->
    <modelVersion>4.0.0</modelVersion>
    <artifactId>castor-maven-plugin</artifactId>
    <packaging>maven-plugin</packaging>
@@ -17,10 +20,12 @@
       <jdkLevel>1.5</jdkLevel>
    </properties>
    
+   <!-- 
    <issueManagement>
-      <system>jira</system>
+      <system>Jira</system>
       <url>http://jira.codehaus.org/browse/MCASTOR</url>
    </issueManagement>
+   -->
    <inceptionYear>2005</inceptionYear>
    <description>
     The Castor plugin is a Maven plugin that provides the functionality of
@@ -36,9 +41,7 @@
    </licenses>
 
    <scm>
-      <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/castor-maven-plugin</connection>
-      <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/castor-maven-plugin</developerConnection>
-      <url>https://fisheye.codehaus.org/browse/mojo/trunk/mojo/castor-maven-plugin</url>
+      <connection>scm:https://github.com/mojohaus/castor-maven-plugin.git</connection>
    </scm>
  
    <build>
