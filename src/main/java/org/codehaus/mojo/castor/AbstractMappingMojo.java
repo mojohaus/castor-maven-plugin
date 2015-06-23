@@ -35,10 +35,9 @@ import org.apache.maven.project.MavenProject;
 import org.exolab.castor.tools.MappingTool;
 
 /**
- * A mojo that uses Castor MappingTool to generate mapping files from a Class. <a
- * href="http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html"> MappingTool</a>.
+ * A mojo that uses Castor MappingTool to generate mapping files from a Class.
  * 
- * @author nicolas <nicolas@apache.org>
+ * @author nicolas
  */
 public abstract class AbstractMappingMojo
     extends AbstractMojo

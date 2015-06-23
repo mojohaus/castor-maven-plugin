@@ -42,10 +42,10 @@ import org.exolab.castor.util.Version;
 
 /**
  * A mojo that uses Castor to generate a collection of javabeans from an XSD. Detailed explanations of many of these can
- * be found in the details for the Castor <a href="http://castor.codehaus.org/sourcegen.html">SourceGenerator</a>.
+ * be found in the details for the Castor SourceGenerator.
  * 
- * @author brozow <brozow@opennms.org>
- * @author jesse <jesse.mcconnell@gmail.com>
+ * @author brozow
+ * @author jesse
  */
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class GenerateMojo extends AbstractMojo

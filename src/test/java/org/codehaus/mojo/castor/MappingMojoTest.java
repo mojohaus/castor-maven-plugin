@@ -22,7 +22,7 @@ import org.apache.maven.plugin.Mojo;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 
 /**
- * @author nicolas <nicolas@apache.org>
+ * @author nicolas
  */
 public class MappingMojoTest
     extends AbstractMojoTestCase

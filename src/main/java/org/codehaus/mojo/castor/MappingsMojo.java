@@ -23,12 +23,11 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * A mojo that uses Castor MappingTool to generate mapping files from a set of Classes. <a
- * href="http://castor.codehaus.org/javadoc/org/exolab/castor/tools/MappingTool.html"> MappingTool</a>.
+ * A mojo that uses Castor MappingTool to generate mapping files from a set of Classes.
  * 
  * @goal mappings
  * @phase process-classes
- * @author nicolas <nicolas@apache.org>
+ * @author nicolas
  */
 public class MappingsMojo
     extends AbstractMappingMojo

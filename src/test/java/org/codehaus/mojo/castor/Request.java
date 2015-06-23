@@ -18,7 +18,7 @@ package org.codehaus.mojo.castor;
  
 
 /**
- * @author nicolas <nicolas@apache.org>
+ * @author nicolas
  */
 public class Request
 {
